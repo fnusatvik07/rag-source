@@ -6,7 +6,7 @@ The definitive single-repository guide for parsing and preparing documents for R
 
 ### [Unstructured Documents](unstructured_documents/)
 
-9 document types, 26+ extraction methods, all with working Python code and sample documents:
+10 document types, 28+ extraction methods, all with working Python code and sample documents:
 
 | Type | Methods | Key Libraries |
 |------|---------|---------------|
@@ -19,6 +19,7 @@ The definitive single-repository guide for parsing and preparing documents for R
 | Email (EML) | stdlib email parsing, structured extraction | email (stdlib) |
 | Markdown / Text | Chunking strategies, AST parsing, semantic chunking | mistune |
 | EPUB | ebooklib extraction, full text pipeline | ebooklib |
+| Video | Whisper transcription, keyframe extraction | openai-whisper, opencv |
 
 ### [Advanced Methods](advanced_methods/)
 
@@ -41,6 +42,9 @@ uv sync
 
 # Install optional OCR dependencies
 uv sync --extra ocr
+
+# Install optional video dependencies (Whisper + OpenCV)
+uv sync --extra video
 
 # Install advanced parsing libraries (pick what you need)
 uv sync --extra docling        # IBM Docling
