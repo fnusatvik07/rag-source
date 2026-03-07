@@ -16,8 +16,7 @@ Output: Markdown text (optimized for LLM consumption)
 Requirements: Python >= 3.11, poppler, tesseract-ocr
 uv pip install megaparse
 """
-import os
-import sys
+
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"

@@ -1,9 +1,9 @@
 """Generate sample .eml files for testing email extraction methods."""
 
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
 from email import encoders
+from email.mime.base import MIMEBase
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from pathlib import Path
 
 SAMPLE_DIR = Path(__file__).parent

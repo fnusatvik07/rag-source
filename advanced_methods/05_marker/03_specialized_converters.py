@@ -9,7 +9,7 @@ Besides the default PdfConverter, Marker provides specialized converters:
 
 uv pip install marker-pdf
 """
-import sys
+
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -132,4 +132,8 @@ if __name__ == "__main__":
     print("3. Structured extraction")
     choice = input("Enter 1/2/3 (default=1): ").strip() or "1"
 
-    {"1": table_converter_demo, "2": ocr_converter_demo, "3": extraction_converter_demo}[choice]()
+    {
+        "1": table_converter_demo,
+        "2": ocr_converter_demo,
+        "3": extraction_converter_demo,
+    }[choice]()

@@ -24,6 +24,7 @@ SAMPLE_DIR = Path(__file__).parent / "sample_docs"
 # HTML tag stripper using Python's built-in html.parser
 # ---------------------------------------------------------------------------
 
+
 class HTMLTextExtractor(HTMLParser):
     """Strip HTML tags and return plain text content."""
 
@@ -66,6 +67,7 @@ def strip_html_tags(html: str) -> str:
 # ---------------------------------------------------------------------------
 # Email parsing functions
 # ---------------------------------------------------------------------------
+
 
 def load_email(eml_path: Path):
     """Load and parse an .eml file into an email.message.EmailMessage object."""
@@ -230,7 +232,7 @@ if __name__ == "__main__":
                 print(f"  Size: {att['size_bytes']} bytes")
                 if att.get("content") and not att["content"].startswith("[Binary"):
                     preview = att["content"][:200]
-                    print(f"  Content preview:")
+                    print("  Content preview:")
                     for line in preview.split("\n"):
                         print(f"    {line}")
                     if len(att["content"]) > 200:

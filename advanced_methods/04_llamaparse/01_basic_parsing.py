@@ -19,8 +19,8 @@ uv pip install llama-parse
 # OR newer:
 uv pip install llama-cloud>=1.0
 """
+
 import os
-import sys
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -62,7 +62,7 @@ def basic_parse_pdf():
     documents = parser.load_data(pdf_path)
 
     for i, doc in enumerate(documents):
-        print(f"\n--- Document {i+1} ---")
+        print(f"\n--- Document {i + 1} ---")
         print(f"Text length: {len(doc.text)}")
         print(f"Preview:\n{doc.text[:500]}")
 

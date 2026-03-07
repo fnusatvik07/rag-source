@@ -63,10 +63,12 @@ def extract_article_content(html_path: Path) -> dict:
 
     # Extract headings
     for heading in content.find_all(["h1", "h2", "h3", "h4"]):
-        result["headings"].append({
-            "level": heading.name,
-            "text": heading.get_text(strip=True),
-        })
+        result["headings"].append(
+            {
+                "level": heading.name,
+                "text": heading.get_text(strip=True),
+            }
+        )
 
     # Extract paragraphs
     for p in content.find_all("p"):
@@ -170,7 +172,7 @@ if __name__ == "__main__":
     print("=" * 60)
     tables = extract_tables_only(table_path)
     for i, table in enumerate(tables):
-        print(f"\nTable {i+1} ({len(table)} rows):")
+        print(f"\nTable {i + 1} ({len(table)} rows):")
         for row in table[:3]:
             print(f"  {row}")
         if len(table) > 3:

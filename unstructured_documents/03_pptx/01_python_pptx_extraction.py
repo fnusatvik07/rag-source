@@ -16,14 +16,13 @@ from pathlib import Path
 
 # --- shared chunking import ------------------------------------------------
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from unstructured_documents.shared.chunking import (
-    chunk_by_sentences,
-    chunk_by_recursive_split,
-    preview_chunks,
-)
-
 from pptx import Presentation
 
+from unstructured_documents.shared.chunking import (
+    chunk_by_recursive_split,
+    chunk_by_sentences,
+    preview_chunks,
+)
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -35,6 +34,7 @@ PPTX_PATH = SAMPLE_DIR / "presentation.pptx"
 # ---------------------------------------------------------------------------
 # Extraction helpers
 # ---------------------------------------------------------------------------
+
 
 def extract_text_from_shape(shape) -> list[dict]:
     """
@@ -101,6 +101,7 @@ def extract_table_data(slide) -> list[list[list[str]]]:
 # Full extraction
 # ---------------------------------------------------------------------------
 
+
 def extract_all_slides(pptx_path: Path) -> list[dict]:
     """
     Walk every slide and extract text, tables, and notes.
@@ -120,11 +121,13 @@ def extract_all_slides(pptx_path: Path) -> list[dict]:
         for shape in slide.shapes:
             shape_extracts.extend(extract_text_from_shape(shape))
 
-        slides_data.append({
-            "slide_number": idx,
-            "shapes": shape_extracts,
-            "notes": extract_notes(slide),
-        })
+        slides_data.append(
+            {
+                "slide_number": idx,
+                "shapes": shape_extracts,
+                "notes": extract_notes(slide),
+            }
+        )
 
     return slides_data
 
@@ -133,12 +136,13 @@ def extract_all_slides(pptx_path: Path) -> list[dict]:
 # Display
 # ---------------------------------------------------------------------------
 
+
 def print_extraction_results(slides_data: list[dict]) -> None:
     """Pretty-print the extraction results."""
     for slide in slides_data:
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"  SLIDE {slide['slide_number']}")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
 
         if not slide["shapes"]:
             print("  (no extractable text)")
@@ -150,7 +154,7 @@ def print_extraction_results(slides_data: list[dict]) -> None:
                 print(f"    {line}")
 
         if slide["notes"]:
-            print(f"\n  [SPEAKER NOTES]")
+            print("\n  [SPEAKER NOTES]")
             for line in slide["notes"].split("\n"):
                 print(f"    {line}")
 
@@ -175,9 +179,9 @@ if __name__ == "__main__":
     print_extraction_results(slides_data)
 
     # ── 2. Table extraction detail ────────────────────────────────────────
-    print(f"\n\n{'='*60}")
+    print(f"\n\n{'=' * 60}")
     print("  TABLE EXTRACTION DETAIL")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     prs = Presentation(str(PPTX_PATH))
     for idx, slide in enumerate(prs.slides, start=1):
         tables = extract_table_data(slide)
@@ -197,14 +201,14 @@ if __name__ == "__main__":
 
     full_text = "\n\n".join(all_text_parts)
 
-    print(f"\n\n{'='*60}")
+    print(f"\n\n{'=' * 60}")
     print("  CHUNKING DEMO — Sentence-based")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     sentence_chunks = chunk_by_sentences(full_text, sentences_per_chunk=4, overlap_sentences=1)
     preview_chunks(sentence_chunks, max_preview=4, max_chars=300)
 
-    print(f"\n\n{'='*60}")
+    print(f"\n\n{'=' * 60}")
     print("  CHUNKING DEMO — Recursive split")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     recursive_chunks = chunk_by_recursive_split(full_text, chunk_size=400)
     preview_chunks(recursive_chunks, max_preview=4, max_chars=300)

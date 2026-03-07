@@ -12,7 +12,7 @@ Unstructured offers three strategies for PDF processing:
 
 uv pip install "unstructured[pdf]"
 """
-import sys
+
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -20,9 +20,10 @@ SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_docu
 
 def compare_strategies():
     """Compare fast, hi_res, and ocr_only on the same PDF."""
-    from unstructured.partition.pdf import partition_pdf
-    from collections import Counter
     import time
+    from collections import Counter
+
+    from unstructured.partition.pdf import partition_pdf
 
     pdf_path = str(SAMPLES_DIR / "01_pdf" / "sample_docs" / "tables.pdf")
 
@@ -51,7 +52,7 @@ def compare_strategies():
                 print(f"  [{type(el).__name__}] {str(el)[:120]}")
         except Exception as e:
             print(f"  Error: {e}")
-            print(f"  (hi_res requires: uv pip install \"unstructured[pdf]\" and model downloads)")
+            print('  (hi_res requires: uv pip install "unstructured[pdf]" and model downloads)')
 
 
 def hi_res_with_options():
@@ -68,16 +69,16 @@ def hi_res_with_options():
         elements = partition_pdf(
             filename=pdf_path,
             strategy="hi_res",
-            infer_table_structure=True,   # Extract table HTML
-            include_page_breaks=True,      # Insert PageBreak elements
-            languages=["eng"],             # OCR language hints
+            infer_table_structure=True,  # Extract table HTML
+            include_page_breaks=True,  # Insert PageBreak elements
+            languages=["eng"],  # OCR language hints
         )
 
         for el in elements:
             if type(el).__name__ == "Table":
-                print(f"\n--- Table Found ---")
+                print("\n--- Table Found ---")
                 print(f"Text: {str(el)[:200]}")
-                if hasattr(el.metadata, 'text_as_html') and el.metadata.text_as_html:
+                if hasattr(el.metadata, "text_as_html") and el.metadata.text_as_html:
                     print(f"HTML: {el.metadata.text_as_html[:300]}")
                 break
         else:

@@ -17,9 +17,9 @@ partitioners for each format with type-specific parameters:
 
 uv pip install "unstructured[all-docs]"
 """
-import sys
-from pathlib import Path
+
 from collections import Counter
+from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
 
@@ -82,11 +82,11 @@ def partition_email_demo():
     # Show email-specific metadata
     for el in elements[:1]:
         meta = el.metadata
-        if hasattr(meta, 'sent_from') and meta.sent_from:
+        if hasattr(meta, "sent_from") and meta.sent_from:
             print(f"  From: {meta.sent_from}")
-        if hasattr(meta, 'sent_to') and meta.sent_to:
+        if hasattr(meta, "sent_to") and meta.sent_to:
             print(f"  To: {meta.sent_to}")
-        if hasattr(meta, 'subject') and meta.subject:
+        if hasattr(meta, "subject") and meta.subject:
             print(f"  Subject: {meta.subject}")
 
 

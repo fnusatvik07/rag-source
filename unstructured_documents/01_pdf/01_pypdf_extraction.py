@@ -125,7 +125,7 @@ def demo_chunking():
     # Summary comparison
     print("\n--- Chunking Strategy Comparison ---")
     print(f"  {'Strategy':<25s} {'Chunks':>8s} {'Avg Size':>10s} {'Min':>6s} {'Max':>6s}")
-    print(f"  {'-'*25} {'-'*8} {'-'*10} {'-'*6} {'-'*6}")
+    print(f"  {'-' * 25} {'-' * 8} {'-' * 10} {'-' * 6} {'-' * 6}")
     for name, chunks in [
         ("Character (500)", char_chunks),
         ("Sentence (5/chunk)", sent_chunks),

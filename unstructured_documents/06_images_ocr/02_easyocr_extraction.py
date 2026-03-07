@@ -30,6 +30,7 @@ def check_easyocr_available() -> bool:
     """Check if EasyOCR is installed."""
     try:
         import easyocr  # noqa: F401
+
         return True
     except ImportError:
         print("=" * 60)
@@ -86,14 +87,16 @@ def extract_with_confidence(image_path: Path, min_confidence: float = 0.5) -> li
             # bbox is a list of 4 points: [top-left, top-right, bottom-right, bottom-left]
             top_left = bbox[0]
             bottom_right = bbox[2]
-            extracted.append({
-                "text": text,
-                "confidence": round(confidence, 3),
-                "x_min": int(top_left[0]),
-                "y_min": int(top_left[1]),
-                "x_max": int(bottom_right[0]),
-                "y_max": int(bottom_right[1]),
-            })
+            extracted.append(
+                {
+                    "text": text,
+                    "confidence": round(confidence, 3),
+                    "x_min": int(top_left[0]),
+                    "y_min": int(top_left[1]),
+                    "x_max": int(bottom_right[0]),
+                    "y_max": int(bottom_right[1]),
+                }
+            )
 
     return extracted
 
@@ -175,8 +178,7 @@ if __name__ == "__main__":
     regions = extract_with_confidence(simple_img, min_confidence=0.3)
     print(f"\nRegions with confidence >= 0.3: {len(regions)}\n")
     for r in regions:
-        print(f"  [{r['confidence']:.3f}] '{r['text']}' "
-              f"(bbox: {r['x_min']},{r['y_min']} -> {r['x_max']},{r['y_max']})")
+        print(f"  [{r['confidence']:.3f}] '{r['text']}' (bbox: {r['x_min']},{r['y_min']} -> {r['x_max']},{r['y_max']})")
 
     # --- 3. Multi-paragraph document ---
     print(f"\n{'=' * 60}")

@@ -17,8 +17,8 @@ uv pip install megaparse langchain-openai
 # OR
 uv pip install megaparse langchain-anthropic
 """
+
 import os
-import sys
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -37,8 +37,8 @@ def vision_parse_openai():
         return
 
     try:
-        from megaparse.parser.megaparse_vision import MegaParseVision
         from langchain_openai import ChatOpenAI
+        from megaparse.parser.megaparse_vision import MegaParseVision
     except ImportError:
         print("Install: uv pip install megaparse langchain-openai")
         return
@@ -142,4 +142,8 @@ if __name__ == "__main__":
     print("3. Standard vs Vision comparison")
     choice = input("Enter 1/2/3 (default=3): ").strip() or "3"
 
-    {"1": vision_parse_openai, "2": vision_parse_anthropic, "3": compare_standard_vs_vision}[choice]()
+    {
+        "1": vision_parse_openai,
+        "2": vision_parse_anthropic,
+        "3": compare_standard_vs_vision,
+    }[choice]()

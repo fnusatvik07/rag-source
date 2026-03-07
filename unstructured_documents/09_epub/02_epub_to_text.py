@@ -99,11 +99,13 @@ def build_table_of_contents(chapters: list[epub.EpubHtml]) -> list[dict]:
     toc = []
     for i, item in enumerate(chapters, 1):
         heading = extract_chapter_heading(item)
-        toc.append({
-            "chapter_num": i,
-            "title": heading,
-            "file": item.get_name(),
-        })
+        toc.append(
+            {
+                "chapter_num": i,
+                "title": heading,
+                "file": item.get_name(),
+            }
+        )
     return toc
 
 
@@ -208,49 +210,55 @@ def prepare_for_rag(book: epub.EpubBook, strategy: str = "chapter") -> list[dict
         # One chunk per chapter
         for i, item in enumerate(chapters):
             text = extract_clean_text(item)
-            rag_chunks.append({
-                "text": text,
-                "metadata": {
-                    "source": "epub",
-                    "book_title": book_title,
-                    "author": book_author,
-                    "chapter": toc[i]["title"],
-                    "chapter_num": toc[i]["chapter_num"],
-                    "chunk_strategy": "chapter",
-                },
-            })
+            rag_chunks.append(
+                {
+                    "text": text,
+                    "metadata": {
+                        "source": "epub",
+                        "book_title": book_title,
+                        "author": book_author,
+                        "chapter": toc[i]["title"],
+                        "chapter_num": toc[i]["chapter_num"],
+                        "chunk_strategy": "chapter",
+                    },
+                }
+            )
 
     elif strategy == "recursive":
         # Recursive split across entire book for uniform chunk sizes
         full_text = epub_to_full_text(book)
         text_chunks = chunk_by_recursive_split(full_text, chunk_size=500)
         for j, chunk_text in enumerate(text_chunks):
-            rag_chunks.append({
-                "text": chunk_text,
-                "metadata": {
-                    "source": "epub",
-                    "book_title": book_title,
-                    "author": book_author,
-                    "chunk_index": j,
-                    "chunk_strategy": "recursive_split",
-                },
-            })
+            rag_chunks.append(
+                {
+                    "text": chunk_text,
+                    "metadata": {
+                        "source": "epub",
+                        "book_title": book_title,
+                        "author": book_author,
+                        "chunk_index": j,
+                        "chunk_strategy": "recursive_split",
+                    },
+                }
+            )
 
     elif strategy == "heading":
         # Heading-aware chunking using markdown conversion
         md_text = epub_to_markdown(book)
         heading_chunks = chunk_by_headings(md_text)
         for chunk in heading_chunks:
-            rag_chunks.append({
-                "text": chunk["content"],
-                "metadata": {
-                    "source": "epub",
-                    "book_title": book_title,
-                    "author": book_author,
-                    "section_heading": chunk["heading"],
-                    "chunk_strategy": "heading_aware",
-                },
-            })
+            rag_chunks.append(
+                {
+                    "text": chunk["content"],
+                    "metadata": {
+                        "source": "epub",
+                        "book_title": book_title,
+                        "author": book_author,
+                        "section_heading": chunk["heading"],
+                        "chunk_strategy": "heading_aware",
+                    },
+                }
+            )
 
     return rag_chunks
 
@@ -280,7 +288,7 @@ if __name__ == "__main__":
     print("=" * 60)
     full_text = epub_to_full_text(book)
     print(f"Total text length: {len(full_text)} characters")
-    print(f"\nFirst 500 chars:")
+    print("\nFirst 500 chars:")
     print(full_text[:500])
     print("...")
 
@@ -290,7 +298,7 @@ if __name__ == "__main__":
     print("=" * 60)
     md_text = epub_to_markdown(book)
     print(f"Markdown length: {len(md_text)} characters")
-    print(f"\nFirst 500 chars:")
+    print("\nFirst 500 chars:")
     print(md_text[:500])
     print("...")
 
@@ -305,17 +313,14 @@ if __name__ == "__main__":
     print(f"Chunks: {len(chapter_chunks)}")
     for chunk in chapter_chunks:
         meta = chunk["metadata"]
-        print(f"  [{meta['chapter_num']}] {meta['chapter']} "
-              f"({len(chunk['text'])} chars)")
+        print(f"  [{meta['chapter_num']}] {meta['chapter']} ({len(chunk['text'])} chars)")
 
     # Strategy B: Recursive split
     print("\n--- Strategy B: Recursive Split (500 chars) ---")
     recursive_chunks = prepare_for_rag(book, strategy="recursive")
     print(f"Chunks: {len(recursive_chunks)}")
     for chunk in recursive_chunks[:5]:
-        print(f"  Chunk {chunk['metadata']['chunk_index']}: "
-              f"{len(chunk['text'])} chars - "
-              f"{chunk['text'][:80]}...")
+        print(f"  Chunk {chunk['metadata']['chunk_index']}: {len(chunk['text'])} chars - {chunk['text'][:80]}...")
     if len(recursive_chunks) > 5:
         print(f"  ... and {len(recursive_chunks) - 5} more chunks")
 
@@ -341,7 +346,7 @@ if __name__ == "__main__":
     print("\nEach chunk includes text + metadata for vector DB storage:\n")
     if heading_chunks:
         sample = heading_chunks[0]
-        print(f"  text: \"{sample['text'][:150]}...\"")
-        print(f"  metadata:")
+        print(f'  text: "{sample["text"][:150]}..."')
+        print("  metadata:")
         for key, value in sample["metadata"].items():
             print(f"    {key}: {value}")

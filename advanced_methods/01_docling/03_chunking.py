@@ -14,7 +14,7 @@ These chunkers preserve context by including heading hierarchies in each chunk.
 
 uv pip install docling docling-core
 """
-import sys
+
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -37,9 +37,9 @@ def hierarchical_chunking():
     print("=" * 60)
 
     for i, chunk in enumerate(chunks[:5]):
-        print(f"\n--- Chunk {i+1} ---")
+        print(f"\n--- Chunk {i + 1} ---")
         print(f"Text: {chunk.text[:200]}...")
-        if hasattr(chunk, 'meta') and chunk.meta:
+        if hasattr(chunk, "meta") and chunk.meta:
             print(f"Metadata: {chunk.meta}")
         print()
 
@@ -66,9 +66,9 @@ def hybrid_chunking():
     print("=" * 60)
 
     for i, chunk in enumerate(chunks[:5]):
-        print(f"\n--- Chunk {i+1} ---")
+        print(f"\n--- Chunk {i + 1} ---")
         print(f"Text: {chunk.text[:200]}...")
-        if hasattr(chunk, 'meta') and chunk.meta:
+        if hasattr(chunk, "meta") and chunk.meta:
             print(f"Metadata: {chunk.meta}")
 
 
@@ -83,21 +83,23 @@ def compare_chunking_strategies():
 
     hier_chunks = list(HierarchicalChunker().chunk(result.document))
 
-    hybrid_chunks = list(HybridChunker(
-        tokenizer="sentence-transformers/all-MiniLM-L6-v2",
-        max_tokens=256,
-    ).chunk(result.document))
+    hybrid_chunks = list(
+        HybridChunker(
+            tokenizer="sentence-transformers/all-MiniLM-L6-v2",
+            max_tokens=256,
+        ).chunk(result.document)
+    )
 
     print("=" * 60)
     print("CHUNKING STRATEGY COMPARISON")
     print("=" * 60)
     print(f"\nHierarchical: {len(hier_chunks)} chunks")
     for i, c in enumerate(hier_chunks[:3]):
-        print(f"  [{i+1}] {len(c.text)} chars: {c.text[:80]}...")
+        print(f"  [{i + 1}] {len(c.text)} chars: {c.text[:80]}...")
 
     print(f"\nHybrid (256 tokens): {len(hybrid_chunks)} chunks")
     for i, c in enumerate(hybrid_chunks[:3]):
-        print(f"  [{i+1}] {len(c.text)} chars: {c.text[:80]}...")
+        print(f"  [{i + 1}] {len(c.text)} chars: {c.text[:80]}...")
 
 
 if __name__ == "__main__":

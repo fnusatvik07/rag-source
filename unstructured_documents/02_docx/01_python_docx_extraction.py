@@ -35,6 +35,7 @@ TABLES_DOC = Path(__file__).resolve().parent / "sample_docs" / "tables_document.
 # 1. Extract paragraphs with style information
 # ===================================================================
 
+
 def extract_paragraphs(doc_path: Path) -> list[dict]:
     """
     Extract every paragraph together with its style name and full text.
@@ -50,26 +51,29 @@ def extract_paragraphs(doc_path: Path) -> list[dict]:
         text = para.text.strip()
         if not text:
             continue
-        paragraphs.append({
-            "style": para.style.name,
-            "text": text,
-            # Run-level detail: capture bold/italic spans
-            "runs": [
-                {
-                    "text": run.text,
-                    "bold": run.bold,
-                    "italic": run.italic,
-                }
-                for run in para.runs
-                if run.text.strip()
-            ],
-        })
+        paragraphs.append(
+            {
+                "style": para.style.name,
+                "text": text,
+                # Run-level detail: capture bold/italic spans
+                "runs": [
+                    {
+                        "text": run.text,
+                        "bold": run.bold,
+                        "italic": run.italic,
+                    }
+                    for run in para.runs
+                    if run.text.strip()
+                ],
+            }
+        )
     return paragraphs
 
 
 # ===================================================================
 # 2. Extract tables
 # ===================================================================
+
 
 def extract_tables(doc_path: Path) -> list[list[list[str]]]:
     """
@@ -92,6 +96,7 @@ def extract_tables(doc_path: Path) -> list[list[list[str]]]:
 # ===================================================================
 # 3. Build a heading-based document hierarchy
 # ===================================================================
+
 
 def build_heading_hierarchy(doc_path: Path) -> list[dict]:
     """
@@ -131,11 +136,13 @@ def build_heading_hierarchy(doc_path: Path) -> list[dict]:
                 "body_parts": [],
             }
         else:
-            current_section["body_parts"].append({
-                "type": "paragraph",
-                "style": style_name,
-                "text": text,
-            })
+            current_section["body_parts"].append(
+                {
+                    "type": "paragraph",
+                    "style": style_name,
+                    "text": text,
+                }
+            )
 
     # Don't forget the last section
     if current_section["body_parts"]:
@@ -147,6 +154,7 @@ def build_heading_hierarchy(doc_path: Path) -> list[dict]:
 # ===================================================================
 # 4. Convert to markdown text (for heading-based chunking)
 # ===================================================================
+
 
 def docx_to_markdown(doc_path: Path) -> str:
     """
@@ -189,6 +197,7 @@ def docx_to_markdown(doc_path: Path) -> str:
 # Main demonstration
 # ===================================================================
 
+
 def main() -> None:
     print("=" * 70)
     print("DOCX Extraction with python-docx")
@@ -214,7 +223,7 @@ def main() -> None:
                 flags.append("BOLD")
             if r["italic"]:
                 flags.append("ITALIC")
-            print(f"  {'':20s}    ^ {', '.join(flags)}: \"{r['text'][:60]}\"")
+            print(f'  {"":20s}    ^ {", ".join(flags)}: "{r["text"][:60]}"')
 
     if len(paragraphs) > 8:
         print(f"\n  ... and {len(paragraphs) - 8} more paragraphs")
@@ -245,8 +254,10 @@ def main() -> None:
     for sec in sections:
         indent = "  " * sec["heading_level"]
         n_parts = len(sec["body_parts"])
-        print(f"  {indent}H{sec['heading_level']}: {sec['heading_text']}  "
-              f"({n_parts} body element{'s' if n_parts != 1 else ''})")
+        print(
+            f"  {indent}H{sec['heading_level']}: {sec['heading_text']}  "
+            f"({n_parts} body element{'s' if n_parts != 1 else ''})"
+        )
 
     # ------------------------------------------------------------------
     # 4. Chunking by headings (via markdown conversion)

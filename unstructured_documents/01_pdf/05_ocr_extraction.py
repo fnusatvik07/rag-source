@@ -60,6 +60,7 @@ def check_dependencies() -> tuple[bool, list[str]]:
     if "pytesseract" not in [m.split()[0] for m in missing]:
         try:
             import pytesseract
+
             pytesseract.get_tesseract_version()
         except Exception:
             missing.append("tesseract-ocr system binary (brew install tesseract / apt install tesseract-ocr)")
@@ -67,7 +68,7 @@ def check_dependencies() -> tuple[bool, list[str]]:
     # Check poppler (needed by pdf2image)
     if "pdf2image" not in [m.split()[0] for m in missing]:
         try:
-            from pdf2image import convert_from_path
+            pass
             # Try a quick conversion to check poppler is available
             # We do not actually convert here; just check the import path
         except Exception:
@@ -103,6 +104,7 @@ def print_installation_guide(missing: list[str]):
 # OCR extraction functions
 # ---------------------------------------------------------------------------
 
+
 def ocr_extract_text(pdf_path: Path, dpi: int = 300) -> list[dict]:
     """
     Extract text from a PDF using OCR.
@@ -117,8 +119,8 @@ def ocr_extract_text(pdf_path: Path, dpi: int = 300) -> list[dict]:
       dpi: Resolution for page-to-image conversion (higher = better accuracy
            but slower). 300 DPI is a good default.
     """
-    from pdf2image import convert_from_path
     import pytesseract
+    from pdf2image import convert_from_path
 
     # Convert PDF pages to images
     images = convert_from_path(str(pdf_path), dpi=dpi)
@@ -132,19 +134,18 @@ def ocr_extract_text(pdf_path: Path, dpi: int = 300) -> list[dict]:
         data = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
 
         # Calculate average confidence (excluding empty/low-confidence entries)
-        confidences = [
-            int(c) for c, t in zip(data["conf"], data["text"])
-            if int(c) > 0 and t.strip()
-        ]
+        confidences = [int(c) for c, t in zip(data["conf"], data["text"]) if int(c) > 0 and t.strip()]
         avg_confidence = sum(confidences) / len(confidences) if confidences else 0
 
-        results.append({
-            "page": i + 1,
-            "text": text,
-            "image_size": image.size,
-            "avg_confidence": round(avg_confidence, 1),
-            "word_count": len([t for t in data["text"] if t.strip()]),
-        })
+        results.append(
+            {
+                "page": i + 1,
+                "text": text,
+                "image_size": image.size,
+                "avg_confidence": round(avg_confidence, 1),
+                "word_count": len([t for t in data["text"] if t.strip()]),
+            }
+        )
 
     return results
 
@@ -161,9 +162,9 @@ def ocr_extract_with_preprocessing(pdf_path: Path, dpi: int = 300) -> list[dict]
 
     These steps are especially helpful for low-quality scans.
     """
-    from pdf2image import convert_from_path
-    from PIL import Image, ImageFilter
     import pytesseract
+    from pdf2image import convert_from_path
+    from PIL import ImageFilter
 
     images = convert_from_path(str(pdf_path), dpi=dpi)
 
@@ -184,11 +185,13 @@ def ocr_extract_with_preprocessing(pdf_path: Path, dpi: int = 300) -> list[dict]
         # Extract text from preprocessed image
         text = pytesseract.image_to_string(binarized)
 
-        results.append({
-            "page": i + 1,
-            "text": text,
-            "preprocessing": "grayscale -> sharpen -> binarize",
-        })
+        results.append(
+            {
+                "page": i + 1,
+                "text": text,
+                "preprocessing": "grayscale -> sharpen -> binarize",
+            }
+        )
 
     return results
 
@@ -201,8 +204,8 @@ def ocr_extract_layout(pdf_path: Path, dpi: int = 300) -> list[dict]:
     word, line, and paragraph. This is useful for preserving document
     layout from scanned PDFs.
     """
-    from pdf2image import convert_from_path
     import pytesseract
+    from pdf2image import convert_from_path
 
     images = convert_from_path(str(pdf_path), dpi=dpi)
 
@@ -218,7 +221,11 @@ def ocr_extract_layout(pdf_path: Path, dpi: int = 300) -> list[dict]:
         lines = {}
         for j in range(len(data["text"])):
             if data["text"][j].strip():
-                line_key = (data["block_num"][j], data["par_num"][j], data["line_num"][j])
+                line_key = (
+                    data["block_num"][j],
+                    data["par_num"][j],
+                    data["line_num"][j],
+                )
                 if line_key not in lines:
                     lines[line_key] = {
                         "words": [],
@@ -227,18 +234,20 @@ def ocr_extract_layout(pdf_path: Path, dpi: int = 300) -> list[dict]:
                     }
                 lines[line_key]["words"].append(data["text"][j])
 
-        results.append({
-            "page": i + 1,
-            "num_lines": len(lines),
-            "lines": [
-                {
-                    "text": " ".join(line["words"]),
-                    "position": {"left": line["left"], "top": line["top"]},
-                }
-                for line in lines.values()
-            ],
-            "hocr_size": len(hocr),
-        })
+        results.append(
+            {
+                "page": i + 1,
+                "num_lines": len(lines),
+                "lines": [
+                    {
+                        "text": " ".join(line["words"]),
+                        "position": {"left": line["left"], "top": line["top"]},
+                    }
+                    for line in lines.values()
+                ],
+                "hocr_size": len(hocr),
+            }
+        )
 
     return results
 
@@ -246,6 +255,7 @@ def ocr_extract_layout(pdf_path: Path, dpi: int = 300) -> list[dict]:
 # ---------------------------------------------------------------------------
 # Demonstrations
 # ---------------------------------------------------------------------------
+
 
 def demo_basic_ocr():
     """Demonstrate basic OCR extraction."""
@@ -297,7 +307,7 @@ def demo_layout_ocr():
         print(f"\n  --- Page {r['page']} ---")
         print(f"  Lines detected: {r['num_lines']}")
         print(f"  hOCR output size: {r['hocr_size']:,} bytes")
-        print(f"\n  First 10 lines with positions:")
+        print("\n  First 10 lines with positions:")
         for line in r["lines"][:10]:
             pos = line["position"]
             print(f"    [{pos['left']:>4d}, {pos['top']:>4d}] {line['text'][:60]}")
@@ -318,6 +328,7 @@ def demo_ocr_vs_text():
     # Direct extraction with PyMuPDF
     try:
         import fitz
+
         doc = fitz.open(str(SIMPLE_TEXT_PDF))
         direct_text = "\n".join(page.get_text() for page in doc)
         doc.close()

@@ -149,17 +149,19 @@ def ocr_with_details(image_path: Path) -> list[dict]:
         word = data["text"][i].strip()
         conf = int(data["conf"][i])
         if word and conf > 0:
-            results.append({
-                "text": word,
-                "confidence": conf,
-                "left": data["left"][i],
-                "top": data["top"][i],
-                "width": data["width"][i],
-                "height": data["height"][i],
-                "block": data["block_num"][i],
-                "paragraph": data["par_num"][i],
-                "line": data["line_num"][i],
-            })
+            results.append(
+                {
+                    "text": word,
+                    "confidence": conf,
+                    "left": data["left"][i],
+                    "top": data["top"][i],
+                    "width": data["width"][i],
+                    "height": data["height"][i],
+                    "block": data["block_num"][i],
+                    "paragraph": data["par_num"][i],
+                    "line": data["line_num"][i],
+                }
+            )
     return results
 
 
@@ -218,10 +220,9 @@ if __name__ == "__main__":
     print("=" * 60)
     details = ocr_with_details(simple_img)
     print(f"Detected {len(details)} words")
-    print(f"\nFirst 10 words with confidence:")
+    print("\nFirst 10 words with confidence:")
     for word in details[:10]:
-        print(f"  '{word['text']}' (conf: {word['confidence']}%, "
-              f"pos: x={word['left']}, y={word['top']})")
+        print(f"  '{word['text']}' (conf: {word['confidence']}%, pos: x={word['left']}, y={word['top']})")
 
     avg_conf = sum(w["confidence"] for w in details) / len(details) if details else 0
     print(f"\nAverage confidence: {avg_conf:.1f}%")

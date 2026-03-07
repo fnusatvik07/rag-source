@@ -37,6 +37,7 @@ SAMPLE_DOC = Path(__file__).resolve().parent / "sample_docs" / "simple_document.
 # 1. Convert DOCX to HTML
 # ===================================================================
 
+
 def docx_to_html(doc_path: Path) -> tuple[str, list[str]]:
     """
     Convert the DOCX file to clean, semantic HTML.
@@ -60,6 +61,7 @@ def docx_to_html(doc_path: Path) -> tuple[str, list[str]]:
 # 2. Convert DOCX to markdown
 # ===================================================================
 
+
 def docx_to_markdown(doc_path: Path) -> tuple[str, list[str]]:
     """
     Convert the DOCX file to markdown using mammoth's built-in converter.
@@ -79,6 +81,7 @@ def docx_to_markdown(doc_path: Path) -> tuple[str, list[str]]:
 # 3. Heading-aware chunking on markdown output
 # ===================================================================
 
+
 def chunk_markdown_by_headings(markdown_text: str) -> list[dict]:
     """
     Use the shared heading-aware chunker on mammoth's markdown output.
@@ -92,6 +95,7 @@ def chunk_markdown_by_headings(markdown_text: str) -> list[dict]:
 # ===================================================================
 # Main demonstration
 # ===================================================================
+
 
 def main() -> None:
     print("=" * 70)
@@ -112,7 +116,7 @@ def main() -> None:
     else:
         print("No conversion warnings.")
 
-    print(f"\nHTML output (first 800 chars):")
+    print("\nHTML output (first 800 chars):")
     print("-" * 50)
     print(html[:800])
     print("-" * 50)
@@ -131,7 +135,7 @@ def main() -> None:
     else:
         print("No conversion warnings.")
 
-    print(f"\nMarkdown output (first 800 chars):")
+    print("\nMarkdown output (first 800 chars):")
     print("-" * 50)
     print(markdown[:800])
     print("-" * 50)
@@ -148,17 +152,13 @@ def main() -> None:
 
     # Count headings in each format
     html_headings = html.count("<h1>") + html.count("<h2>") + html.count("<h3>")
-    md_headings = sum(
-        1 for line in markdown.splitlines()
-        if line.strip().startswith("#")
-    )
+    md_headings = sum(1 for line in markdown.splitlines() if line.strip().startswith("#"))
     print(f"{'Heading elements':<30s} {html_headings:>12d} {md_headings:>12d}")
 
     # Count list items
     html_list_items = html.count("<li>")
     md_list_items = sum(
-        1 for line in markdown.splitlines()
-        if line.strip().startswith("- ") or line.strip().startswith("* ")
+        1 for line in markdown.splitlines() if line.strip().startswith("- ") or line.strip().startswith("* ")
     )
     print(f"{'List items':<30s} {html_list_items:>12d} {md_list_items:>12d}")
 

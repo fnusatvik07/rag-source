@@ -26,8 +26,8 @@ import docx2txt
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from unstructured_documents.shared.chunking import (
     chunk_by_characters,
-    chunk_by_sentences,
     chunk_by_recursive_split,
+    chunk_by_sentences,
     preview_chunks,
 )
 
@@ -37,6 +37,7 @@ SAMPLE_DOC = Path(__file__).resolve().parent / "sample_docs" / "simple_document.
 # ===================================================================
 # 1. Basic text extraction
 # ===================================================================
+
 
 def extract_text(doc_path: Path) -> str:
     """
@@ -53,26 +54,28 @@ def extract_text(doc_path: Path) -> str:
 # 2. Analysis: what is preserved vs. lost
 # ===================================================================
 
+
 def analyse_extraction(text: str) -> dict:
     """
     Run simple heuristics to illustrate what docx2txt keeps and drops.
     """
-    lines = [l for l in text.splitlines() if l.strip()]
+    lines = [line for line in text.splitlines() if line.strip()]
     words = text.split()
 
     return {
         "total_characters": len(text),
         "total_words": len(words),
         "non_empty_lines": len(lines),
-        "contains_tabs": "\t" in text,          # tables survive as tab-separated
-        "contains_bullet_markers": False,         # bullet symbols are lost
-        "heading_markers_present": False,         # heading markup is lost
+        "contains_tabs": "\t" in text,  # tables survive as tab-separated
+        "contains_bullet_markers": False,  # bullet symbols are lost
+        "heading_markers_present": False,  # heading markup is lost
     }
 
 
 # ===================================================================
 # Main demonstration
 # ===================================================================
+
 
 def main() -> None:
     print("=" * 70)

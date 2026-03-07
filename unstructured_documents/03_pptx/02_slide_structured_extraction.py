@@ -18,12 +18,12 @@ from pathlib import Path
 
 # --- shared chunking import ------------------------------------------------
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from pptx import Presentation
+
 from unstructured_documents.shared.chunking import (
     chunk_by_sentences,
     preview_chunks,
 )
-
-from pptx import Presentation
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -35,6 +35,7 @@ PPTX_PATH = SAMPLE_DIR / "presentation.pptx"
 # ---------------------------------------------------------------------------
 # Structured extraction
 # ---------------------------------------------------------------------------
+
 
 def _collect_body_text(shape) -> list[str]:
     """
@@ -116,13 +117,15 @@ def extract_structured_slides(pptx_path: Path) -> list[dict]:
         if slide.has_notes_slide:
             notes = slide.notes_slide.notes_text_frame.text.strip()
 
-        structured.append({
-            "slide_number": idx,
-            "title": title,
-            "body_text": body_text,
-            "table_data": tables,
-            "notes": notes,
-        })
+        structured.append(
+            {
+                "slide_number": idx,
+                "title": title,
+                "body_text": body_text,
+                "table_data": tables,
+                "notes": notes,
+            }
+        )
 
     return structured
 
@@ -130,6 +133,7 @@ def extract_structured_slides(pptx_path: Path) -> list[dict]:
 # ---------------------------------------------------------------------------
 # RAG-ready conversion
 # ---------------------------------------------------------------------------
+
 
 def table_to_text(table: list[list[str]]) -> str:
     """
@@ -184,15 +188,17 @@ def slides_to_rag_chunks(slides: list[dict], include_notes: bool = True) -> list
         if not text:
             continue
 
-        chunks.append({
-            "text": text,
-            "metadata": {
-                "slide_number": slide["slide_number"],
-                "title": slide["title"],
-                "has_table": len(slide["table_data"]) > 0,
-                "has_notes": bool(slide["notes"]),
-            },
-        })
+        chunks.append(
+            {
+                "text": text,
+                "metadata": {
+                    "slide_number": slide["slide_number"],
+                    "title": slide["title"],
+                    "has_table": len(slide["table_data"]) > 0,
+                    "has_notes": bool(slide["notes"]),
+                },
+            }
+        )
 
     return chunks
 
@@ -217,15 +223,16 @@ def build_slide_summaries(slides: list[dict]) -> list[str]:
 # Display helpers
 # ---------------------------------------------------------------------------
 
+
 def print_structured_slides(slides: list[dict]) -> None:
     """Pretty-print the structured slide data."""
     for slide in slides:
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"  SLIDE {slide['slide_number']}: {slide['title'] or '(no title)'}")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
 
         if slide["body_text"]:
-            print(f"\n  Body text:")
+            print("\n  Body text:")
             for line in slide["body_text"].split("\n"):
                 print(f"    {line}")
 
@@ -236,7 +243,7 @@ def print_structured_slides(slides: list[dict]) -> None:
                     print(f"    {row}")
 
         if slide["notes"]:
-            print(f"\n  Speaker notes:")
+            print("\n  Speaker notes:")
             for line in slide["notes"].split("\n"):
                 print(f"    {line}")
 
@@ -245,11 +252,13 @@ def print_rag_chunks(chunks: list[dict]) -> None:
     """Print RAG chunks with metadata."""
     for i, chunk in enumerate(chunks, start=1):
         meta = chunk["metadata"]
-        print(f"\n{'- '*30}")
-        print(f"  Chunk {i}  |  Slide {meta['slide_number']}  |  "
-              f"Title: {meta['title'] or 'N/A'}  |  "
-              f"Table: {meta['has_table']}  |  Notes: {meta['has_notes']}")
-        print(f"{'- '*30}")
+        print(f"\n{'- ' * 30}")
+        print(
+            f"  Chunk {i}  |  Slide {meta['slide_number']}  |  "
+            f"Title: {meta['title'] or 'N/A'}  |  "
+            f"Table: {meta['has_table']}  |  Notes: {meta['has_notes']}"
+        )
+        print(f"{'- ' * 30}")
         # Truncate for display
         text = chunk["text"]
         if len(text) > 400:
@@ -280,30 +289,30 @@ if __name__ == "__main__":
 
     # ── 2. Slide summaries ────────────────────────────────────────────────
     summaries = build_slide_summaries(slides)
-    print(f"\n\n{'='*60}")
+    print(f"\n\n{'=' * 60}")
     print("  SLIDE SUMMARIES")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     for s in summaries:
         print(f"  {s}")
 
     # ── 3. RAG-ready chunks (one per slide) ───────────────────────────────
     rag_chunks = slides_to_rag_chunks(slides, include_notes=True)
-    print(f"\n\n{'='*60}")
+    print(f"\n\n{'=' * 60}")
     print("  RAG-READY CHUNKS (one per slide, notes included)")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print_rag_chunks(rag_chunks)
 
     # ── 4. Sentence-based chunking on full text ───────────────────────────
     full_text = "\n\n".join(chunk["text"] for chunk in rag_chunks)
-    print(f"\n\n{'='*60}")
+    print(f"\n\n{'=' * 60}")
     print("  SENTENCE-BASED CHUNKING (merged text)")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     sentence_chunks = chunk_by_sentences(full_text, sentences_per_chunk=5, overlap_sentences=1)
     preview_chunks(sentence_chunks, max_preview=5, max_chars=350)
 
     # ── 5. JSON output sample ─────────────────────────────────────────────
-    print(f"\n\n{'='*60}")
+    print(f"\n\n{'=' * 60}")
     print("  JSON OUTPUT (first 2 slides)")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     json_sample = json.dumps(rag_chunks[:2], indent=2, ensure_ascii=False)
     print(json_sample)

@@ -18,8 +18,8 @@ uv pip install azure-ai-documentintelligence
 
 Free tier: 500 pages/month
 """
+
 import os
-import sys
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -28,9 +28,8 @@ SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_docu
 def layout_extraction():
     """Extract layout from a PDF using prebuilt-layout model."""
     try:
-        from azure.core.credentials import AzureKeyCredential
         from azure.ai.documentintelligence import DocumentIntelligenceClient
-        from azure.ai.documentintelligence.models import AnalyzeDocumentRequest
+        from azure.core.credentials import AzureKeyCredential
     except ImportError:
         print("Install: uv pip install azure-ai-documentintelligence")
         _show_example_code()
@@ -81,7 +80,7 @@ def layout_extraction():
     if result.tables:
         print(f"\n--- Tables: {len(result.tables)} found ---")
         for i, table in enumerate(result.tables):
-            print(f"\n  Table {i+1}: {table.row_count} rows x {table.column_count} cols")
+            print(f"\n  Table {i + 1}: {table.row_count} rows x {table.column_count} cols")
             for cell in table.cells[:6]:
                 print(f"    [{cell.row_index},{cell.column_index}] = {cell.content}")
 
@@ -126,8 +125,8 @@ for para in result.paragraphs:
 def markdown_output():
     """Get document content as Markdown (Azure's built-in conversion)."""
     try:
-        from azure.core.credentials import AzureKeyCredential
         from azure.ai.documentintelligence import DocumentIntelligenceClient
+        from azure.core.credentials import AzureKeyCredential
     except ImportError:
         print("Install: uv pip install azure-ai-documentintelligence")
         return

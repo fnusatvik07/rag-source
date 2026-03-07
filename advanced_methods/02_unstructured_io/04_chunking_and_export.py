@@ -16,7 +16,7 @@ Export options:
 
 uv pip install "unstructured[all-docs]"
 """
-import sys
+
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -24,8 +24,8 @@ SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_docu
 
 def chunk_by_title_demo():
     """Chunk elements by title for semantic RAG chunks."""
-    from unstructured.partition.auto import partition
     from unstructured.chunking.title import chunk_by_title
+    from unstructured.partition.auto import partition
 
     pdf_path = str(SAMPLES_DIR / "01_pdf" / "sample_docs" / "mixed_content.pdf")
     elements = partition(filename=pdf_path)
@@ -33,8 +33,8 @@ def chunk_by_title_demo():
     # Chunk by title with size constraints
     chunks = chunk_by_title(
         elements,
-        max_characters=1000,        # Max chunk size
-        new_after_n_chars=500,       # Soft limit to start new chunk
+        max_characters=1000,  # Max chunk size
+        new_after_n_chars=500,  # Soft limit to start new chunk
         combine_text_under_n_chars=200,  # Merge small chunks
     )
 
@@ -43,7 +43,7 @@ def chunk_by_title_demo():
     print("=" * 60)
 
     for i, chunk in enumerate(chunks[:5]):
-        print(f"\n--- Chunk {i+1} [{type(chunk).__name__}] ---")
+        print(f"\n--- Chunk {i + 1} [{type(chunk).__name__}] ---")
         text = str(chunk)
         print(f"  Length: {len(text)} chars")
         print(f"  Text: {text[:200]}...")
@@ -66,8 +66,10 @@ def export_formats_demo():
     print(text[:300])
 
     # 2. JSON
-    from unstructured.staging.base import elements_to_json
     import json
+
+    from unstructured.staging.base import elements_to_json
+
     json_str = elements_to_json(elements)
     print(f"\n--- JSON ({len(json_str)} chars) ---")
     parsed = json.loads(json_str)
@@ -75,6 +77,7 @@ def export_formats_demo():
 
     # 3. Dict list
     from unstructured.staging.base import elements_to_dicts
+
     dicts = elements_to_dicts(elements)
     print(f"\n--- Dicts ({len(dicts)} items) ---")
     if dicts:
@@ -84,9 +87,10 @@ def export_formats_demo():
     # 4. DataFrame
     try:
         from unstructured.staging.base import convert_to_dataframe
+
         df = convert_to_dataframe(elements)
         print(f"\n--- DataFrame ({len(df)} rows) ---")
-        print(df[['type', 'text']].head().to_string())
+        print(df[["type", "text"]].head().to_string())
     except Exception as e:
         print(f"\n--- DataFrame: {e} ---")
 
@@ -105,8 +109,15 @@ def metadata_exploration():
     for el in elements[:5]:
         print(f"\n[{type(el).__name__}] {str(el)[:80]}")
         meta = el.metadata
-        attrs = ['filename', 'file_directory', 'page_number', 'coordinates',
-                 'text_as_html', 'languages', 'detection_class_prob']
+        attrs = [
+            "filename",
+            "file_directory",
+            "page_number",
+            "coordinates",
+            "text_as_html",
+            "languages",
+            "detection_class_prob",
+        ]
         for attr in attrs:
             val = getattr(meta, attr, None)
             if val is not None:

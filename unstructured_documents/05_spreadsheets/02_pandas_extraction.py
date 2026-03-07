@@ -14,7 +14,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import pandas as pd
 
-from unstructured_documents.shared.chunking import chunk_by_recursive_split, preview_chunks
+from unstructured_documents.shared.chunking import (
+    chunk_by_recursive_split,
+    preview_chunks,
+)
 
 SAMPLE_DIR = Path(__file__).parent / "sample_docs"
 
@@ -61,8 +64,8 @@ def dataframe_to_row_chunks(df: pd.DataFrame, sheet_name: str, rows_per_chunk: i
     headers = list(df.columns)
 
     for i in range(0, len(df), rows_per_chunk):
-        batch = df.iloc[i:i + rows_per_chunk]
-        lines = [f"[{sheet_name} - rows {i+1} to {min(i+rows_per_chunk, len(df))}]"]
+        batch = df.iloc[i : i + rows_per_chunk]
+        lines = [f"[{sheet_name} - rows {i + 1} to {min(i + rows_per_chunk, len(df))}]"]
         lines.append(f"Columns: {', '.join(str(h) for h in headers)}\n")
         for _, row in batch.iterrows():
             parts = [f"{col}: {val}" for col, val in row.items() if pd.notna(val)]
@@ -112,7 +115,7 @@ if __name__ == "__main__":
     products_df = pd.read_csv(csv_path)
     print(f"Shape: {products_df.shape}")
     print(f"Columns: {list(products_df.columns)}")
-    print(f"\nFirst 3 rows:")
+    print("\nFirst 3 rows:")
     print(products_df.head(3).to_string())
 
     # Convert to natural language

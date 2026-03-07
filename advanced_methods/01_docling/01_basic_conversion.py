@@ -10,11 +10,12 @@ ConversionResult containing a DoclingDocument with full structure preserved.
 
 uv pip install docling
 """
-import sys
+
 from pathlib import Path
 
 # Reference sample docs from the documents folder
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
+
 
 def convert_single_document():
     """Convert a single PDF to markdown using default settings."""
@@ -29,7 +30,7 @@ def convert_single_document():
     print("DOCLING: Basic PDF to Markdown")
     print("=" * 60)
     print(f"Status: {result.status}")
-    print(f"\n--- Markdown Output ---\n")
+    print("\n--- Markdown Output ---\n")
     print(result.document.export_to_markdown())
 
 
@@ -84,7 +85,6 @@ def export_formats():
     print(text[:300])
 
     # JSON (lossless serialization)
-    import json
     json_str = doc.model_dump_json(indent=2)
     print(f"\n--- JSON ({len(json_str)} chars) ---")
     print(json_str[:400] + "...")

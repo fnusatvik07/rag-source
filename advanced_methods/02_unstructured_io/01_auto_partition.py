@@ -9,7 +9,7 @@ ListItem, Image, etc.) that represent the document's structure.
 
 uv pip install "unstructured[all-docs]"
 """
-import sys
+
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -29,7 +29,7 @@ def auto_partition_pdf():
     for el in elements:
         print(f"\n[{type(el).__name__}]")
         print(f"  Text: {str(el)[:150]}")
-        if hasattr(el, 'metadata'):
+        if hasattr(el, "metadata"):
             if el.metadata.page_number:
                 print(f"  Page: {el.metadata.page_number}")
 
@@ -44,7 +44,10 @@ def auto_partition_multiple():
         ("HTML", SAMPLES_DIR / "04_html" / "sample_docs" / "article_page.html"),
         ("PPTX", SAMPLES_DIR / "03_pptx" / "sample_docs" / "presentation.pptx"),
         ("Email", SAMPLES_DIR / "07_email" / "sample_docs" / "plain_text.eml"),
-        ("Markdown", SAMPLES_DIR / "08_markdown_txt" / "sample_docs" / "technical_doc.md"),
+        (
+            "Markdown",
+            SAMPLES_DIR / "08_markdown_txt" / "sample_docs" / "technical_doc.md",
+        ),
         ("EPUB", SAMPLES_DIR / "09_epub" / "sample_docs" / "sample_book.epub"),
     ]
 
@@ -59,6 +62,7 @@ def auto_partition_multiple():
 
         # Show element type distribution
         from collections import Counter
+
         type_counts = Counter(type(el).__name__ for el in elements)
         for etype, count in type_counts.most_common():
             print(f"  {etype}: {count}")
@@ -97,6 +101,7 @@ Unstructured returns typed Element objects:
 """)
 
     from collections import Counter
+
     type_counts = Counter(type(el).__name__ for el in elements)
     print(f"Found in this document ({len(elements)} elements):")
     for etype, count in type_counts.most_common():
@@ -110,4 +115,8 @@ if __name__ == "__main__":
     print("3. Element types overview")
     choice = input("Enter 1/2/3 (default=1): ").strip() or "1"
 
-    {"1": auto_partition_pdf, "2": auto_partition_multiple, "3": element_types_overview}[choice]()
+    {
+        "1": auto_partition_pdf,
+        "2": auto_partition_multiple,
+        "3": element_types_overview,
+    }[choice]()

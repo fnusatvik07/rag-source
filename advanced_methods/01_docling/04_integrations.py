@@ -12,7 +12,7 @@ uv pip install docling
 uv pip install llama-index-readers-docling  # for LlamaIndex
 uv pip install langchain-docling            # for LangChain
 """
-import sys
+
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -48,7 +48,7 @@ for doc in documents:
     print("DOCLING + LLAMAINDEX")
     print("=" * 60)
     for i, doc in enumerate(documents):
-        print(f"\nDocument {i+1}:")
+        print(f"\nDocument {i + 1}:")
         print(f"  Text length: {len(doc.text)}")
         print(f"  Preview: {doc.text[:200]}...")
 
@@ -85,7 +85,7 @@ for doc in documents:
     print("DOCLING + LANGCHAIN")
     print("=" * 60)
     for i, doc in enumerate(documents):
-        print(f"\nDocument {i+1}:")
+        print(f"\nDocument {i + 1}:")
         print(f"  Content: {doc.page_content[:200]}...")
         print(f"  Metadata: {doc.metadata}")
 
