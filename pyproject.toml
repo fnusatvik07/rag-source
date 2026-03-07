@@ -58,3 +58,7 @@ llamaparse = [
 marker = [
     "marker-pdf>=1.0",
 ]
+video = [
+    "openai-whisper>=20231117",
+    "opencv-python-headless>=4.8",
+]

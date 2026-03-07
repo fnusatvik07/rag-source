@@ -18,6 +18,7 @@ uv run python unstructured_documents/06_images_ocr/sample_docs/generate_samples.
 uv run python unstructured_documents/07_email/sample_docs/generate_samples.py
 uv run python unstructured_documents/08_markdown_txt/sample_docs/generate_samples.py
 uv run python unstructured_documents/09_epub/sample_docs/generate_samples.py
+uv run python unstructured_documents/10_video/sample_docs/generate_samples.py
 
 # Run any extraction script
 uv run python unstructured_documents/01_pdf/01_pypdf_extraction.py
@@ -36,6 +37,7 @@ uv run python unstructured_documents/01_pdf/01_pypdf_extraction.py
 | 7 | **Email (EML)** | [07_email](07_email/) | 2 | 2 | email (stdlib) |
 | 8 | **Markdown / Text** | [08_markdown_txt](08_markdown_txt/) | 3 | 3 | mistune, csv (stdlib) |
 | 9 | **EPUB (Ebooks)** | [09_epub](09_epub/) | 2 | 2 | ebooklib, BeautifulSoup |
+| 10 | **Video** | [10_video](10_video/) | 2 | 2 | openai-whisper, OpenCV |
 
 ## Decision Matrix: Which Parser for Which Situation?
 
@@ -78,6 +80,7 @@ uv run python unstructured_documents/01_pdf/01_pypdf_extraction.py
 | Markdown | mistune AST parsing + heading-aware chunking |
 | Plain text | Recursive character splitting |
 | EPUB | ebooklib + BeautifulSoup |
+| Video | Whisper transcription + OpenCV frame extraction |
 
 ## Shared Utilities
 
@@ -130,7 +133,8 @@ unstructured_documents/
 ├── 06_images_ocr/                     # OCR for images (2 methods)
 ├── 07_email/                          # Email parsing (2 methods)
 ├── 08_markdown_txt/                   # Markdown/text parsing (3 methods)
-└── 09_epub/                           # EPUB ebook parsing (2 methods)
+├── 09_epub/                           # EPUB ebook parsing (2 methods)
+└── 10_video/                          # Video parsing (2 methods)
 
 Each folder contains:
 ├── README.md                          # Comprehensive guide for that document type
