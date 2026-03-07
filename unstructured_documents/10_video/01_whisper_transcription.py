@@ -93,7 +93,9 @@ def extract_audio(video_path: Path, output_path: Path | None = None) -> Path:
     If output_path is not specified, creates a temporary file.
     """
     if output_path is None:
-        output_path = Path(tempfile.mktemp(suffix=".wav"))
+        tmp = tempfile.NamedTemporaryFile(suffix=".wav", delete=False)
+        output_path = Path(tmp.name)
+        tmp.close()
 
     subprocess.run(
         [
