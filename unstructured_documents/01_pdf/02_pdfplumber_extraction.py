@@ -29,6 +29,7 @@ TABLES_PDF = SAMPLE_DIR / "tables.pdf"
 # 1. Text extraction with better formatting
 # ---------------------------------------------------------------------------
 
+
 def extract_text_with_layout(pdf_path: Path) -> list[dict]:
     """
     Extract text page by page, preserving layout spacing.
@@ -42,18 +43,23 @@ def extract_text_with_layout(pdf_path: Path) -> list[dict]:
         for i, page in enumerate(pdf.pages):
             text = page.extract_text() or ""
             # extract_text with layout settings for better column handling
-            text_layout = page.extract_text(
-                layout=True,           # Use layout-aware extraction
-                x_density=7.25,        # Horizontal character density
-                y_density=13,          # Vertical line density
-            ) or ""
-            results.append({
-                "page": i + 1,
-                "text_default": text,
-                "text_layout": text_layout,
-                "width": float(page.width),
-                "height": float(page.height),
-            })
+            text_layout = (
+                page.extract_text(
+                    layout=True,  # Use layout-aware extraction
+                    x_density=7.25,  # Horizontal character density
+                    y_density=13,  # Vertical line density
+                )
+                or ""
+            )
+            results.append(
+                {
+                    "page": i + 1,
+                    "text_default": text,
+                    "text_layout": text_layout,
+                    "width": float(page.width),
+                    "height": float(page.height),
+                }
+            )
     return results
 
 
@@ -90,6 +96,7 @@ def demo_text_extraction():
 # 2. Character-level and word-level extraction
 # ---------------------------------------------------------------------------
 
+
 def demo_character_level():
     """Show character-level and word-level data available via pdfplumber."""
     print("\n" + "=" * 70)
@@ -104,27 +111,29 @@ def demo_character_level():
         print(f"\n  Total characters on page 1: {len(chars)}")
         print("\n  First 5 characters with metadata:")
         print(f"  {'Char':<6s} {'x0':>8s} {'y0':>8s} {'x1':>8s} {'y1':>8s} {'Font':<30s} {'Size':>6s}")
-        print(f"  {'-'*6} {'-'*8} {'-'*8} {'-'*8} {'-'*8} {'-'*30} {'-'*6}")
+        print(f"  {'-' * 6} {'-' * 8} {'-' * 8} {'-' * 8} {'-' * 8} {'-' * 30} {'-' * 6}")
         for c in chars[:5]:
-            print(f"  {repr(c['text']):<6s} {c['x0']:>8.2f} {c['top']:>8.2f} "
-                  f"{c['x1']:>8.2f} {c['bottom']:>8.2f} "
-                  f"{c.get('fontname', 'N/A'):<30s} {c.get('size', 0):>6.1f}")
+            print(
+                f"  {repr(c['text']):<6s} {c['x0']:>8.2f} {c['top']:>8.2f} "
+                f"{c['x1']:>8.2f} {c['bottom']:>8.2f} "
+                f"{c.get('fontname', 'N/A'):<30s} {c.get('size', 0):>6.1f}"
+            )
 
         # Word-level data
         words = page.extract_words()
         print(f"\n  Total words on page 1: {len(words)}")
         print("\n  First 10 words with bounding boxes:")
         print(f"  {'Word':<20s} {'x0':>8s} {'top':>8s} {'x1':>8s} {'bottom':>8s}")
-        print(f"  {'-'*20} {'-'*8} {'-'*8} {'-'*8} {'-'*8}")
+        print(f"  {'-' * 20} {'-' * 8} {'-' * 8} {'-' * 8} {'-' * 8}")
         for w in words[:10]:
             text = w["text"][:20]
-            print(f"  {text:<20s} {w['x0']:>8.2f} {w['top']:>8.2f} "
-                  f"{w['x1']:>8.2f} {w['bottom']:>8.2f}")
+            print(f"  {text:<20s} {w['x0']:>8.2f} {w['top']:>8.2f} {w['x1']:>8.2f} {w['bottom']:>8.2f}")
 
 
 # ---------------------------------------------------------------------------
 # 3. Table detection and extraction
 # ---------------------------------------------------------------------------
+
 
 def extract_tables_from_pdf(pdf_path: Path) -> list[dict]:
     """
@@ -138,13 +147,15 @@ def extract_tables_from_pdf(pdf_path: Path) -> list[dict]:
         for i, page in enumerate(pdf.pages):
             page_tables = page.extract_tables()
             for j, table in enumerate(page_tables):
-                tables.append({
-                    "page": i + 1,
-                    "table_index": j,
-                    "data": table,       # list of rows, each row is a list of cells
-                    "num_rows": len(table),
-                    "num_cols": len(table[0]) if table else 0,
-                })
+                tables.append(
+                    {
+                        "page": i + 1,
+                        "table_index": j,
+                        "data": table,  # list of rows, each row is a list of cells
+                        "num_rows": len(table),
+                        "num_cols": len(table[0]) if table else 0,
+                    }
+                )
     return tables
 
 
@@ -203,13 +214,13 @@ def demo_table_settings():
 
         # Show table finder debug info
         table_finder = page.debug_tablefinder()
-        print(f"\n  Table finder debug:")
+        print("\n  Table finder debug:")
         print(f"    Tables detected: {len(table_finder.tables)}")
         for idx, tbl in enumerate(table_finder.tables):
             bbox = tbl.bbox
-            print(f"    Table {idx + 1} bbox: "
-                  f"x0={bbox[0]:.1f}, top={bbox[1]:.1f}, "
-                  f"x1={bbox[2]:.1f}, bottom={bbox[3]:.1f}")
+            print(
+                f"    Table {idx + 1} bbox: x0={bbox[0]:.1f}, top={bbox[1]:.1f}, x1={bbox[2]:.1f}, bottom={bbox[3]:.1f}"
+            )
 
 
 if __name__ == "__main__":

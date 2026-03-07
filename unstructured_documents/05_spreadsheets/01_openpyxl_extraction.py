@@ -14,7 +14,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 import openpyxl
 
-from unstructured_documents.shared.chunking import chunk_by_recursive_split, preview_chunks
+from unstructured_documents.shared.chunking import (
+    chunk_by_recursive_split,
+    preview_chunks,
+)
 
 SAMPLE_DIR = Path(__file__).parent / "sample_docs"
 
@@ -46,13 +49,15 @@ def extract_sheet_with_metadata(xlsx_path: Path) -> list[dict]:
         headers = [str(h) if h else f"col_{i}" for i, h in enumerate(rows[0])]
         data = rows[1:]
 
-        results.append({
-            "sheet_name": sheet_name,
-            "dimensions": ws.dimensions,
-            "row_count": len(data),
-            "headers": headers,
-            "data": data,
-        })
+        results.append(
+            {
+                "sheet_name": sheet_name,
+                "dimensions": ws.dimensions,
+                "row_count": len(data),
+                "headers": headers,
+                "data": data,
+            }
+        )
 
     return results
 
@@ -137,9 +142,6 @@ if __name__ == "__main__":
     print(f"\n{'=' * 60}")
     print("5. CHUNKED OUTPUT FOR RAG")
     print("=" * 60)
-    all_text = "\n\n".join(
-        sheet_to_natural_language(s["sheet_name"], s["headers"], s["data"])
-        for s in sheet_meta
-    )
+    all_text = "\n\n".join(sheet_to_natural_language(s["sheet_name"], s["headers"], s["data"]) for s in sheet_meta)
     chunks = chunk_by_recursive_split(all_text, chunk_size=400)
     preview_chunks(chunks)

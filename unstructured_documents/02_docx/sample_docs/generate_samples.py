@@ -13,10 +13,8 @@ Run:
 from pathlib import Path
 
 from docx import Document
-from docx.shared import Inches, Pt, RGBColor
-from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.enum.table import WD_TABLE_ALIGNMENT
-
+from docx.shared import Pt, RGBColor
 
 SAMPLE_DIR = Path(__file__).resolve().parent
 
@@ -24,6 +22,7 @@ SAMPLE_DIR = Path(__file__).resolve().parent
 # ---------------------------------------------------------------------------
 # 1. simple_document.docx
 # ---------------------------------------------------------------------------
+
 
 def create_simple_document() -> None:
     """Create a document with headings, paragraphs, bullet points, and rich text."""
@@ -67,17 +66,12 @@ def create_simple_document() -> None:
     # --- H3: Key Indicators ---
     doc.add_heading("Key Climate Indicators", level=3)
 
-    doc.add_paragraph(
-        "Scientists track several indicators to monitor the state of the climate system:"
-    )
+    doc.add_paragraph("Scientists track several indicators to monitor the state of the climate system:")
 
     bullets = [
-        "Global mean surface temperature has risen approximately 1.1 °C above "
-        "pre-industrial levels as of 2023.",
-        "Arctic sea-ice extent has declined by roughly 13 % per decade since "
-        "satellite records began in 1979.",
-        "Global mean sea level has risen about 20 cm since 1900, with the rate of "
-        "rise accelerating in recent decades.",
+        "Global mean surface temperature has risen approximately 1.1 °C above pre-industrial levels as of 2023.",
+        "Arctic sea-ice extent has declined by roughly 13 % per decade since satellite records began in 1979.",
+        "Global mean sea level has risen about 20 cm since 1900, with the rate of rise accelerating in recent decades.",
         "Ocean heat content has increased steadily, with the upper 2,000 metres of "
         "the ocean absorbing over 90 % of the excess heat.",
         "Atmospheric methane concentrations have more than doubled since "
@@ -93,9 +87,7 @@ def create_simple_document() -> None:
     para = doc.add_paragraph("The effects of climate change are ")
     run = para.add_run("already being felt")
     run.italic = True
-    para.add_run(
-        " across every continent and ocean. Some of the most significant impacts include:"
-    )
+    para.add_run(" across every continent and ocean. Some of the most significant impacts include:")
 
     doc.add_heading("Extreme Weather Events", level=3)
 
@@ -148,8 +140,7 @@ def create_simple_document() -> None:
         "Building resilient infrastructure designed for future climate conditions.",
         "Developing drought-resistant crop varieties and sustainable water management.",
         "Strengthening early-warning systems for extreme weather events.",
-        "Implementing nature-based solutions such as mangrove restoration for coastal "
-        "protection.",
+        "Implementing nature-based solutions such as mangrove restoration for coastal protection.",
     ]
     for point in adaptation_points:
         doc.add_paragraph(point, style="List Bullet")
@@ -164,8 +155,7 @@ def create_simple_document() -> None:
         "if rapid, far-reaching action is taken across all sectors of the economy. "
     )
     run = para.add_run(
-        "The choices made in the next decade will determine the trajectory of the "
-        "climate for centuries to come."
+        "The choices made in the next decade will determine the trajectory of the climate for centuries to come."
     )
     run.bold = True
     run.italic = True
@@ -178,6 +168,7 @@ def create_simple_document() -> None:
 # ---------------------------------------------------------------------------
 # 2. tables_document.docx
 # ---------------------------------------------------------------------------
+
 
 def create_tables_document() -> None:
     """Create a document with multiple tables and explanatory text."""
@@ -203,11 +194,11 @@ def create_tables_document() -> None:
 
     financial_headers = ["Metric", "Q3 2025", "Q2 2025", "Q3 2024", "YoY Change"]
     financial_data = [
-        ["Revenue",             "$12,450,000", "$11,820,000", "$10,900,000", "+14.2 %"],
-        ["Cost of Goods Sold",  "$7,470,000",  "$7,210,000",  "$6,760,000",  "+10.5 %"],
-        ["Gross Profit",        "$4,980,000",  "$4,610,000",  "$4,140,000",  "+20.3 %"],
-        ["Operating Expenses",  "$2,850,000",  "$2,790,000",  "$2,610,000",  "+9.2 %"],
-        ["Net Income",          "$2,130,000",  "$1,820,000",  "$1,530,000",  "+39.2 %"],
+        ["Revenue", "$12,450,000", "$11,820,000", "$10,900,000", "+14.2 %"],
+        ["Cost of Goods Sold", "$7,470,000", "$7,210,000", "$6,760,000", "+10.5 %"],
+        ["Gross Profit", "$4,980,000", "$4,610,000", "$4,140,000", "+20.3 %"],
+        ["Operating Expenses", "$2,850,000", "$2,790,000", "$2,610,000", "+9.2 %"],
+        ["Net Income", "$2,130,000", "$1,820,000", "$1,530,000", "+39.2 %"],
     ]
 
     table = doc.add_table(rows=1, cols=len(financial_headers))
@@ -234,15 +225,20 @@ def create_tables_document() -> None:
         "current stock levels across our main product categories."
     )
 
-    inventory_headers = ["Product Category", "SKU Count", "Units in Stock",
-                         "Reorder Point", "Status"]
+    inventory_headers = [
+        "Product Category",
+        "SKU Count",
+        "Units in Stock",
+        "Reorder Point",
+        "Status",
+    ]
     inventory_data = [
-        ["Electronics",        "142", "34,500",  "10,000", "Adequate"],
-        ["Home Appliances",    "87",  "12,200",  "5,000",  "Adequate"],
-        ["Office Supplies",    "215", "98,000",  "25,000", "Adequate"],
-        ["Industrial Tools",   "63",  "4,800",   "5,000",  "Low — reorder initiated"],
-        ["Automotive Parts",   "178", "22,100",  "8,000",  "Adequate"],
-        ["Health & Safety",    "54",  "7,300",   "7,000",  "Marginal"],
+        ["Electronics", "142", "34,500", "10,000", "Adequate"],
+        ["Home Appliances", "87", "12,200", "5,000", "Adequate"],
+        ["Office Supplies", "215", "98,000", "25,000", "Adequate"],
+        ["Industrial Tools", "63", "4,800", "5,000", "Low — reorder initiated"],
+        ["Automotive Parts", "178", "22,100", "8,000", "Adequate"],
+        ["Health & Safety", "54", "7,300", "7,000", "Marginal"],
     ]
 
     table = doc.add_table(rows=1, cols=len(inventory_headers))
@@ -272,13 +268,25 @@ def create_tables_document() -> None:
 
     emp_headers = ["Name", "Title", "Department", "Office", "Email"]
     emp_data = [
-        ["Sarah Chen",       "CEO",                 "Executive",   "New York",    "s.chen@acme.com"],
-        ["James Okafor",     "CFO",                 "Finance",     "New York",    "j.okafor@acme.com"],
-        ["Maria Gonzalez",   "VP of Engineering",   "Engineering", "San Francisco","m.gonzalez@acme.com"],
-        ["David Kim",        "VP of Sales",         "Sales",       "Chicago",     "d.kim@acme.com"],
-        ["Priya Patel",      "VP of Operations",    "Operations",  "Dallas",      "p.patel@acme.com"],
-        ["Thomas Weber",     "Head of HR",          "Human Resources","London",   "t.weber@acme.com"],
-        ["Aisha Mohammed",   "General Counsel",     "Legal",       "New York",    "a.mohammed@acme.com"],
+        ["Sarah Chen", "CEO", "Executive", "New York", "s.chen@acme.com"],
+        ["James Okafor", "CFO", "Finance", "New York", "j.okafor@acme.com"],
+        [
+            "Maria Gonzalez",
+            "VP of Engineering",
+            "Engineering",
+            "San Francisco",
+            "m.gonzalez@acme.com",
+        ],
+        ["David Kim", "VP of Sales", "Sales", "Chicago", "d.kim@acme.com"],
+        ["Priya Patel", "VP of Operations", "Operations", "Dallas", "p.patel@acme.com"],
+        ["Thomas Weber", "Head of HR", "Human Resources", "London", "t.weber@acme.com"],
+        [
+            "Aisha Mohammed",
+            "General Counsel",
+            "Legal",
+            "New York",
+            "a.mohammed@acme.com",
+        ],
     ]
 
     table = doc.add_table(rows=1, cols=len(emp_headers))
@@ -309,6 +317,7 @@ def create_tables_document() -> None:
 # 3. styled_document.docx
 # ---------------------------------------------------------------------------
 
+
 def create_styled_document() -> None:
     """Create a document exercising many built-in Word styles."""
 
@@ -316,9 +325,7 @@ def create_styled_document() -> None:
 
     # Title & subtitle
     doc.add_paragraph("The Art of Software Architecture", style="Title")
-    doc.add_paragraph(
-        "A Practical Guide to Designing Maintainable Systems", style="Subtitle"
-    )
+    doc.add_paragraph("A Practical Guide to Designing Maintainable Systems", style="Subtitle")
 
     # --- Heading 1 ---
     doc.add_heading("Introduction", level=1)
@@ -335,15 +342,15 @@ def create_styled_document() -> None:
         "This guide distils decades of collective industry experience into concise, "
         "actionable advice. It is intended for developers who are transitioning into "
         "architecture roles, as well as seasoned architects looking for a refresher.",
-        style="Normal"
+        style="Normal",
     )
 
     # --- Quote style ---
     doc.add_paragraph(
         '"Architecture is the decisions that you wish you could get right early in '
-        'a project, but that you are not necessarily more likely to get them right '
+        "a project, but that you are not necessarily more likely to get them right "
         'than any other." — Ralph Johnson',
-        style="Quote"
+        style="Quote",
     )
 
     # --- Heading 1 ---
@@ -369,20 +376,15 @@ def create_styled_document() -> None:
 
     doc.add_heading("SOLID Principles", level=2)
 
-    doc.add_paragraph(
-        "The SOLID principles provide a foundation for object-oriented design:"
-    )
+    doc.add_paragraph("The SOLID principles provide a foundation for object-oriented design:")
 
     # Numbered list
     numbered_items = [
-        "Single Responsibility Principle — a class should have one, and only one, "
-        "reason to change.",
-        "Open/Closed Principle — software entities should be open for extension but "
-        "closed for modification.",
+        "Single Responsibility Principle — a class should have one, and only one, reason to change.",
+        "Open/Closed Principle — software entities should be open for extension but closed for modification.",
         "Liskov Substitution Principle — subtypes must be substitutable for their "
         "base types without altering program correctness.",
-        "Interface Segregation Principle — clients should not be forced to depend on "
-        "interfaces they do not use.",
+        "Interface Segregation Principle — clients should not be forced to depend on interfaces they do not use.",
         "Dependency Inversion Principle — high-level modules should not depend on "
         "low-level modules; both should depend on abstractions.",
     ]
@@ -424,22 +426,20 @@ def create_styled_document() -> None:
     # --- Code-style text ---
     doc.add_heading("Code Example: Dependency Injection", level=2)
 
-    doc.add_paragraph(
-        "The following pseudo-code shows constructor-based dependency injection:"
-    )
+    doc.add_paragraph("The following pseudo-code shows constructor-based dependency injection:")
 
     # Use a monospace font for code
     code_para = doc.add_paragraph()
     code_run = code_para.add_run(
-        'class OrderService:\n'
-        '    def __init__(self, repository: OrderRepository,\n'
-        '                 notifier: NotificationService):\n'
-        '        self._repository = repository\n'
-        '        self._notifier = notifier\n'
-        '\n'
-        '    def place_order(self, order: Order) -> None:\n'
-        '        self._repository.save(order)\n'
-        '        self._notifier.send_confirmation(order)\n'
+        "class OrderService:\n"
+        "    def __init__(self, repository: OrderRepository,\n"
+        "                 notifier: NotificationService):\n"
+        "        self._repository = repository\n"
+        "        self._notifier = notifier\n"
+        "\n"
+        "    def place_order(self, order: Order) -> None:\n"
+        "        self._repository.save(order)\n"
+        "        self._notifier.send_confirmation(order)\n"
     )
     code_run.font.name = "Courier New"
     code_run.font.size = Pt(9)
@@ -452,10 +452,7 @@ def create_styled_document() -> None:
     )
 
     # --- Another Quote ---
-    doc.add_paragraph(
-        '"Make each program do one thing well." — Unix Philosophy',
-        style="Quote"
-    )
+    doc.add_paragraph('"Make each program do one thing well." — Unix Philosophy', style="Quote")
 
     # --- Heading 1 ---
     doc.add_heading("Quality Attributes", level=1)
@@ -488,7 +485,7 @@ def create_styled_document() -> None:
 
     doc.add_paragraph(
         '"The best architectures are grown, not designed." — Adapted from Fred Brooks',
-        style="Quote"
+        style="Quote",
     )
 
     path = SAMPLE_DIR / "styled_document.docx"

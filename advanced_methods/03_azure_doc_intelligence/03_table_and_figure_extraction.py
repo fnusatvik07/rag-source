@@ -7,8 +7,8 @@ and optional HTML output. Figures include bounding regions and captions.
 
 uv pip install azure-ai-documentintelligence
 """
+
 import os
-import sys
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -17,8 +17,8 @@ SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_docu
 def table_extraction():
     """Extract tables with full structure from PDF."""
     try:
-        from azure.core.credentials import AzureKeyCredential
         from azure.ai.documentintelligence import DocumentIntelligenceClient
+        from azure.core.credentials import AzureKeyCredential
     except ImportError:
         print("Install: uv pip install azure-ai-documentintelligence")
         _show_table_example()
@@ -50,7 +50,7 @@ def table_extraction():
         return
 
     for i, table in enumerate(result.tables):
-        print(f"\n--- Table {i+1} ---")
+        print(f"\n--- Table {i + 1} ---")
         print(f"  Rows: {table.row_count}, Columns: {table.column_count}")
         print(f"  Page: {table.bounding_regions[0].page_number if table.bounding_regions else 'N/A'}")
 

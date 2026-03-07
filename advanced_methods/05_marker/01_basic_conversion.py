@@ -15,7 +15,7 @@ Output: Markdown, JSON, HTML, chunks
 uv pip install marker-pdf
 uv pip install marker-pdf[full]  # for DOCX, PPTX, XLSX support
 """
-import sys
+
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -50,7 +50,7 @@ def basic_pdf_to_markdown():
     print(f"\n--- Markdown Output ({len(text)} chars) ---")
     print(text[:800])
 
-    print(f"\n--- Metadata ---")
+    print("\n--- Metadata ---")
     for key, val in metadata.items():
         print(f"  {key}: {val}")
 
@@ -61,9 +61,9 @@ def basic_pdf_to_markdown():
 def convert_with_config():
     """Convert with custom configuration: output format, page range, etc."""
     try:
+        from marker.config.parser import ConfigParser
         from marker.converters.pdf import PdfConverter
         from marker.models import create_model_dict
-        from marker.config.parser import ConfigParser
         from marker.output import text_from_rendered
     except ImportError:
         print("Install: uv pip install marker-pdf")
@@ -75,7 +75,7 @@ def convert_with_config():
     # Custom configuration
     config = {
         "output_format": "markdown",
-        "page_range": "0-2",           # First 3 pages only
+        "page_range": "0-2",  # First 3 pages only
         "force_ocr": False,
         "disable_image_extraction": True,
     }

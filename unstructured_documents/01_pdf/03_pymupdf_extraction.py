@@ -29,6 +29,7 @@ SIMPLE_TEXT_PDF = SAMPLE_DIR / "simple_text.pdf"
 # 1. Basic text extraction
 # ---------------------------------------------------------------------------
 
+
 def extract_text_basic(pdf_path: Path) -> list[str]:
     """Extract plain text page by page using get_text()."""
     doc = fitz.open(str(pdf_path))
@@ -61,6 +62,7 @@ def demo_basic_extraction():
 # ---------------------------------------------------------------------------
 # 2. Layout-preserved extraction using "blocks" mode
 # ---------------------------------------------------------------------------
+
 
 def extract_text_with_layout(pdf_path: Path) -> list[str]:
     """
@@ -99,6 +101,7 @@ def demo_layout_extraction():
 # ---------------------------------------------------------------------------
 # 3. Block-level extraction with bounding boxes
 # ---------------------------------------------------------------------------
+
 
 def extract_blocks(pdf_path: Path, page_num: int = 0) -> list[dict]:
     """
@@ -146,15 +149,17 @@ def demo_block_extraction():
     blocks = extract_blocks(SIMPLE_TEXT_PDF, page_num=0)
     print(f"\n  Total blocks on page 1: {len(blocks)}")
     print(f"\n  {'Block':>5s} {'Type':<6s} {'x0':>7s} {'y0':>7s} {'x1':>7s} {'y1':>7s}  Text Preview")
-    print(f"  {'-'*5} {'-'*6} {'-'*7} {'-'*7} {'-'*7} {'-'*7}  {'-'*30}")
+    print(f"  {'-' * 5} {'-' * 6} {'-' * 7} {'-' * 7} {'-' * 7} {'-' * 7}  {'-' * 30}")
 
     for b in blocks[:10]:
         text_preview = b["text"][:40].replace("\n", " ").strip()
         if len(b["text"]) > 40:
             text_preview += "..."
-        print(f"  {b['block_no']:>5d} {b['block_type']:<6s} "
-              f"{b['x0']:>7.1f} {b['y0']:>7.1f} "
-              f"{b['x1']:>7.1f} {b['y1']:>7.1f}  {text_preview}")
+        print(
+            f"  {b['block_no']:>5d} {b['block_type']:<6s} "
+            f"{b['x0']:>7.1f} {b['y0']:>7.1f} "
+            f"{b['x1']:>7.1f} {b['y1']:>7.1f}  {text_preview}"
+        )
 
     if len(blocks) > 10:
         print(f"\n  ... and {len(blocks) - 10} more blocks")
@@ -163,6 +168,7 @@ def demo_block_extraction():
 # ---------------------------------------------------------------------------
 # 4. Structured dict extraction (spans with font info)
 # ---------------------------------------------------------------------------
+
 
 def extract_structured_dict(pdf_path: Path, page_num: int = 0) -> dict:
     """
@@ -198,14 +204,14 @@ def demo_structured_extraction():
                 for span in line["spans"]:
                     fonts_seen.add((span["font"], round(span["size"], 1)))
 
-    print(f"\n  Unique font/size combinations found:")
+    print("\n  Unique font/size combinations found:")
     for font, size in sorted(fonts_seen, key=lambda x: (-x[1], x[0])):
         print(f"    {font:<35s}  size={size}")
 
     # Show first few spans with full detail
-    print(f"\n  First 8 text spans with details:")
+    print("\n  First 8 text spans with details:")
     print(f"  {'Text':<35s} {'Font':<25s} {'Size':>5s} {'Bold':>5s}")
-    print(f"  {'-'*35} {'-'*25} {'-'*5} {'-'*5}")
+    print(f"  {'-' * 35} {'-' * 25} {'-' * 5} {'-' * 5}")
     count = 0
     for block in data["blocks"]:
         if block["type"] != 0:
@@ -231,6 +237,7 @@ def demo_structured_extraction():
 # ---------------------------------------------------------------------------
 # 5. Fast batch extraction
 # ---------------------------------------------------------------------------
+
 
 def demo_batch_extraction():
     """Demonstrate fast batch extraction of all pages at once."""
@@ -262,12 +269,9 @@ def demo_batch_extraction():
     texts_c = [page.get_text("rawdict") for page in doc3]
     time_c = time.perf_counter() - start
 
-    print(f"\n  Page-by-page (text mode):      {time_a*1000:>8.2f} ms  "
-          f"({sum(len(t) for t in texts_a):,} chars)")
-    print(f"  Page-by-page (sorted text):    {time_b*1000:>8.2f} ms  "
-          f"({sum(len(t) for t in texts_b):,} chars)")
-    print(f"  Page-by-page (rawdict mode):   {time_c*1000:>8.2f} ms  "
-          f"({len(texts_c)} page dicts)")
+    print(f"\n  Page-by-page (text mode):      {time_a * 1000:>8.2f} ms  ({sum(len(t) for t in texts_a):,} chars)")
+    print(f"  Page-by-page (sorted text):    {time_b * 1000:>8.2f} ms  ({sum(len(t) for t in texts_b):,} chars)")
+    print(f"  Page-by-page (rawdict mode):   {time_c * 1000:>8.2f} ms  ({len(texts_c)} page dicts)")
 
     doc.close()
     doc2.close()
@@ -281,6 +285,7 @@ def demo_batch_extraction():
 # ---------------------------------------------------------------------------
 # 6. Practical: Detect headings by font size
 # ---------------------------------------------------------------------------
+
 
 def detect_headings(pdf_path: Path) -> list[dict]:
     """
@@ -315,13 +320,15 @@ def detect_headings(pdf_path: Path) -> list[dict]:
             for line in block["lines"]:
                 for span in line["spans"]:
                     if span["size"] > body_size + 1 and span["text"].strip():
-                        headings.append({
-                            "page": page_num + 1,
-                            "text": span["text"].strip(),
-                            "font_size": round(span["size"], 1),
-                            "font": span["font"],
-                            "y_position": round(span["origin"][1], 1),
-                        })
+                        headings.append(
+                            {
+                                "page": page_num + 1,
+                                "text": span["text"].strip(),
+                                "font_size": round(span["size"], 1),
+                                "font": span["font"],
+                                "y_position": round(span["origin"][1], 1),
+                            }
+                        )
 
     doc.close()
     return headings
@@ -336,7 +343,7 @@ def demo_heading_detection():
     headings = detect_headings(SIMPLE_TEXT_PDF)
     print(f"\n  Headings detected: {len(headings)}")
     print(f"\n  {'Page':>4s}  {'Size':>5s}  Text")
-    print(f"  {'-'*4}  {'-'*5}  {'-'*50}")
+    print(f"  {'-' * 4}  {'-' * 5}  {'-' * 50}")
     for h in headings:
         print(f"  {h['page']:>4d}  {h['font_size']:>5.1f}  {h['text'][:60]}")
 

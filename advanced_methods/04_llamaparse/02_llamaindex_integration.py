@@ -6,8 +6,8 @@ complete RAG pipelines: parse -> chunk -> embed -> index -> query.
 
 uv pip install llama-parse llama-index
 """
+
 import os
-import sys
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -28,8 +28,8 @@ def llamaindex_rag_pipeline():
         return
 
     try:
+        from llama_index.core import VectorStoreIndex
         from llama_parse import LlamaParse
-        from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
     except ImportError:
         print("Install: uv pip install llama-parse llama-index")
         _show_pipeline_code()

@@ -13,7 +13,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from unstructured_documents.shared.chunking import chunk_by_recursive_split, preview_chunks
+from unstructured_documents.shared.chunking import (
+    chunk_by_recursive_split,
+    preview_chunks,
+)
 
 SAMPLE_DIR = Path(__file__).parent / "sample_docs"
 

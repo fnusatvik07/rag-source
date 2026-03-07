@@ -10,8 +10,7 @@ Marker supports four output formats, each suited to different use cases:
 
 uv pip install marker-pdf
 """
-import sys
-import json
+
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -46,9 +45,9 @@ Metadata (all formats):
 
     # Try live demo if marker is installed
     try:
+        from marker.config.parser import ConfigParser
         from marker.converters.pdf import PdfConverter
         from marker.models import create_model_dict
-        from marker.config.parser import ConfigParser
         from marker.output import text_from_rendered
 
         pdf_path = str(SAMPLES_DIR / "01_pdf" / "sample_docs" / "simple_text.pdf")

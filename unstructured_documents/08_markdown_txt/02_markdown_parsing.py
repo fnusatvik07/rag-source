@@ -29,6 +29,7 @@ SAMPLE_DIR = Path(__file__).parent / "sample_docs"
 # AST-based extraction helpers
 # ---------------------------------------------------------------------------
 
+
 def parse_markdown_ast(md_text: str) -> list[dict]:
     """Parse markdown text into a mistune AST (list of token dicts)."""
     markdown_parser = mistune.create_markdown(renderer=None)
@@ -82,10 +83,12 @@ def extract_code_blocks(tokens: list) -> list[dict]:
         if isinstance(token, dict):
             if token.get("type") == "code":
                 attrs = token.get("attrs", {})
-                blocks.append({
-                    "language": attrs.get("info", "") or "",
-                    "code": token.get("raw", "") or token.get("text", ""),
-                })
+                blocks.append(
+                    {
+                        "language": attrs.get("info", "") or "",
+                        "code": token.get("raw", "") or token.get("text", ""),
+                    }
+                )
             for key in ("children", "body"):
                 if key in token and isinstance(token[key], list):
                     blocks.extend(extract_code_blocks(token[key]))
@@ -179,6 +182,7 @@ def _collect_text(tokens: list) -> str:
 # Heading-aware chunking for markdown
 # ---------------------------------------------------------------------------
 
+
 def chunk_markdown_by_sections(md_text: str) -> list[dict]:
     """
     Split markdown into chunks where each section (heading + content until
@@ -199,7 +203,6 @@ def extract_code_blocks_for_rag(md_text: str) -> list[dict]:
     """
     ast = parse_markdown_ast(md_text)
     code_blocks = extract_code_blocks(ast)
-    headings = extract_headings(ast)
 
     # Approximate: match code blocks to the nearest preceding heading
     # by finding the heading positions in the raw text
@@ -227,13 +230,15 @@ def extract_code_blocks_for_rag(md_text: str) -> list[dict]:
             else:
                 break
 
-        result.append({
-            "section": section,
-            "language": block["language"],
-            "code": code_text,
-            "rag_text": f"Code example from section '{section}' "
-                       f"(language: {block['language'] or 'unknown'}):\n\n{code_text}",
-        })
+        result.append(
+            {
+                "section": section,
+                "language": block["language"],
+                "code": code_text,
+                "rag_text": f"Code example from section '{section}' "
+                f"(language: {block['language'] or 'unknown'}):\n\n{code_text}",
+            }
+        )
 
     return result
 
@@ -241,6 +246,7 @@ def extract_code_blocks_for_rag(md_text: str) -> list[dict]:
 # ---------------------------------------------------------------------------
 # Structured section extraction (for research papers)
 # ---------------------------------------------------------------------------
+
 
 def extract_research_sections(md_text: str) -> dict[str, str]:
     """
@@ -292,7 +298,7 @@ if __name__ == "__main__":
     paragraphs = extract_paragraphs(ast)
     print(f"\n--- Paragraphs ({len(paragraphs)} total) ---")
     for i, p in enumerate(paragraphs[:3]):
-        print(f"  [{i+1}] {p[:100]}...")
+        print(f"  [{i + 1}] {p[:100]}...")
     if len(paragraphs) > 3:
         print(f"  ... and {len(paragraphs) - 3} more")
 
@@ -301,21 +307,20 @@ if __name__ == "__main__":
     print(f"\n--- Code Blocks ({len(code_blocks)} total) ---")
     for i, cb in enumerate(code_blocks):
         preview = cb["code"][:80].replace("\n", "\\n")
-        print(f"  [{i+1}] lang={cb['language'] or 'none'}: {preview}...")
+        print(f"  [{i + 1}] lang={cb['language'] or 'none'}: {preview}...")
 
     # --- Extract lists ---
     lists = extract_lists(ast)
     print(f"\n--- Lists ({len(lists)} total) ---")
     for i, lst in enumerate(lists):
         kind = "ordered" if lst["ordered"] else "unordered"
-        print(f"  [{i+1}] {kind}, {len(lst['items'])} items: "
-              f"{lst['items'][0][:60]}...")
+        print(f"  [{i + 1}] {kind}, {len(lst['items'])} items: {lst['items'][0][:60]}...")
 
     # --- Extract tables ---
     tables = extract_tables(ast)
     print(f"\n--- Tables ({len(tables)} total) ---")
     for i, tbl in enumerate(tables):
-        print(f"  [{i+1}] {len(tbl['headers'])} columns, {len(tbl['rows'])} rows")
+        print(f"  [{i + 1}] {len(tbl['headers'])} columns, {len(tbl['rows'])} rows")
         print(f"       Headers: {tbl['headers']}")
         if tbl["rows"]:
             print(f"       First row: {tbl['rows'][0]}")
@@ -341,8 +346,7 @@ if __name__ == "__main__":
 
     code_rag_chunks = extract_code_blocks_for_rag(tech_md)
     for i, chunk in enumerate(code_rag_chunks):
-        print(f"  [{i+1}] Section: '{chunk['section']}', "
-              f"Language: {chunk['language'] or 'none'}")
+        print(f"  [{i + 1}] Section: '{chunk['section']}', Language: {chunk['language'] or 'none'}")
         preview = chunk["code"][:100].replace("\n", "\\n")
         print(f"      Code: {preview}...")
 

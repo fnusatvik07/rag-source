@@ -43,7 +43,8 @@ def generate_article_page():
             <h2>Key NLP Tasks</h2>
             <ul>
                 <li><strong>Tokenization</strong>: Breaking text into individual words or subwords</li>
-                <li><strong>Named Entity Recognition</strong>: Identifying entities like people, organizations, and locations</li>
+                <li><strong>Named Entity Recognition</strong>: Identifying entities like people, organizations, \
+and locations</li>
                 <li><strong>Sentiment Analysis</strong>: Determining the emotional tone of text</li>
                 <li><strong>Machine Translation</strong>: Converting text from one language to another</li>
                 <li><strong>Text Summarization</strong>: Creating concise summaries of longer documents</li>

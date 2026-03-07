@@ -13,9 +13,9 @@ making it an efficient first step in any RAG pipeline.
 
 uv pip install megaparse
 """
-import os
-import sys
+
 import re
+import sys
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -42,18 +42,20 @@ def rag_preparation_pipeline():
     # Step 3: Add metadata
     enriched_chunks = []
     for i, chunk in enumerate(chunks):
-        enriched_chunks.append({
-            "id": f"chunk_{i}",
-            "text": chunk["text"],
-            "metadata": {
-                "heading": chunk.get("heading", ""),
-                "char_count": len(chunk["text"]),
-                "chunk_index": i,
-                "source": "megaparse",
+        enriched_chunks.append(
+            {
+                "id": f"chunk_{i}",
+                "text": chunk["text"],
+                "metadata": {
+                    "heading": chunk.get("heading", ""),
+                    "char_count": len(chunk["text"]),
+                    "chunk_index": i,
+                    "source": "megaparse",
+                },
             }
-        })
+        )
 
-    print(f"Step 3: Enriched with metadata")
+    print("Step 3: Enriched with metadata")
 
     # Display results
     print(f"\n{'=' * 60}")
@@ -117,6 +119,7 @@ def _get_parsed_content():
     """Get parsed content from MegaParse or use sample Markdown."""
     try:
         from megaparse import MegaParse
+
         pdf_path = str(SAMPLES_DIR / "01_pdf" / "sample_docs" / "mixed_content.pdf")
         megaparse = MegaParse()
         return megaparse.load(pdf_path)

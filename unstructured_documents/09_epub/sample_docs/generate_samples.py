@@ -25,12 +25,7 @@ def create_chapter(
 ) -> epub.EpubHtml:
     """Create an EPUB chapter with proper HTML wrapping."""
     chapter = epub.EpubHtml(title=title, file_name=filename, lang=lang)
-    chapter.content = (
-        f"<html><body>"
-        f"<h1>{title}</h1>"
-        f"{html_body}"
-        f"</body></html>"
-    )
+    chapter.content = f"<html><body><h1>{title}</h1>{html_body}</body></html>"
     return chapter
 
 
@@ -43,7 +38,11 @@ def generate_sample_book() -> Path:
     book.set_title("Introduction to Data Science")
     book.set_language("en")
     book.add_author("AI Research Lab")
-    book.add_metadata("DC", "description", "A beginner-friendly introduction to data science concepts.")
+    book.add_metadata(
+        "DC",
+        "description",
+        "A beginner-friendly introduction to data science concepts.",
+    )
     book.add_metadata("DC", "publisher", "RAG Source Publishing")
 
     # --- Chapter 1: What is Data Science? ---
@@ -196,9 +195,9 @@ def generate_sample_book() -> Path:
     epub.write_epub(str(output_path), book, {})
 
     print(f"  Created: {output_path.name}")
-    print(f"    Title:    Introduction to Data Science")
-    print(f"    Author:   AI Research Lab")
-    print(f"    Chapters: 4")
+    print("    Title:    Introduction to Data Science")
+    print("    Author:   AI Research Lab")
+    print("    Chapters: 4")
 
     return output_path
 

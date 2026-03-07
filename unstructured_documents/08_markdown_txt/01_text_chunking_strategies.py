@@ -17,8 +17,8 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from unstructured_documents.shared.chunking import (
     chunk_by_characters,
-    chunk_by_sentences,
     chunk_by_recursive_split,
+    chunk_by_sentences,
     preview_chunks,
 )
 
@@ -28,6 +28,7 @@ SAMPLE_DIR = Path(__file__).parent / "sample_docs"
 # ---------------------------------------------------------------------------
 # Additional chunking strategy: paragraph-based
 # ---------------------------------------------------------------------------
+
 
 def chunk_by_paragraphs(text: str, min_paragraph_length: int = 50) -> list[str]:
     """
@@ -65,6 +66,7 @@ def chunk_by_paragraphs(text: str, min_paragraph_length: int = 50) -> list[str]:
 # Comparison utilities
 # ---------------------------------------------------------------------------
 
+
 def compute_stats(chunks: list[str]) -> dict:
     """Compute summary statistics for a list of text chunks."""
     if not chunks:
@@ -81,11 +83,13 @@ def compute_stats(chunks: list[str]) -> dict:
 
 def print_stats(label: str, stats: dict):
     """Pretty-print chunk statistics."""
-    print(f"  {label:30s}  "
-          f"chunks={stats['count']:>3}  "
-          f"avg={stats['avg_chars']:>5} chars  "
-          f"min={stats['min_chars']:>4}  "
-          f"max={stats['max_chars']:>5}")
+    print(
+        f"  {label:30s}  "
+        f"chunks={stats['count']:>3}  "
+        f"avg={stats['avg_chars']:>5} chars  "
+        f"min={stats['min_chars']:>4}  "
+        f"max={stats['max_chars']:>5}"
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -100,8 +104,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     text = text_path.read_text()
-    print(f"Loaded: {text_path.name} ({len(text)} chars, "
-          f"~{len(text.split())} words)\n")
+    print(f"Loaded: {text_path.name} ({len(text)} chars, ~{len(text.split())} words)\n")
 
     # ===================================================================
     # Strategy 1: Fixed character chunking at different sizes
@@ -123,7 +126,7 @@ if __name__ == "__main__":
     print("\n  Sample chunk (500 chars, chunk #2):")
     if len(chunks_500) >= 2:
         sample = chunks_500[1]
-        print(f"    \"{sample[:150]}...\"")
+        print(f'    "{sample[:150]}..."')
 
     # ===================================================================
     # Strategy 2: Sentence-based chunking
@@ -143,7 +146,7 @@ if __name__ == "__main__":
     print("\n  Sample chunk (5 sentences, chunk #1):")
     if chunks_sent:
         sample = chunks_sent[0]
-        print(f"    \"{sample[:200]}...\"")
+        print(f'    "{sample[:200]}..."')
 
     # ===================================================================
     # Strategy 3: Paragraph-based chunking
@@ -161,7 +164,7 @@ if __name__ == "__main__":
     print("\n  Sample chunk (paragraph #1):")
     if chunks_para:
         sample = chunks_para[0]
-        print(f"    \"{sample[:200]}...\"")
+        print(f'    "{sample[:200]}..."')
 
     # ===================================================================
     # Strategy 4: Recursive splitting
@@ -181,7 +184,7 @@ if __name__ == "__main__":
     print("\n  Sample chunk (recursive, 500 chars, chunk #1):")
     if chunks_rec:
         sample = chunks_rec[0]
-        print(f"    \"{sample[:200]}...\"")
+        print(f'    "{sample[:200]}..."')
 
     # ===================================================================
     # Summary comparison
@@ -198,12 +201,11 @@ if __name__ == "__main__":
     ]
 
     print(f"\n  {'Strategy':35s} {'Chunks':>6}  {'Avg':>6}  {'Min':>5}  {'Max':>5}")
-    print(f"  {'-'*35} {'-'*6}  {'-'*6}  {'-'*5}  {'-'*5}")
+    print(f"  {'-' * 35} {'-' * 6}  {'-' * 6}  {'-' * 5}  {'-' * 5}")
 
     for label, chunks in strategies:
         s = compute_stats(chunks)
-        print(f"  {label:35s} {s['count']:>6}  {s['avg_chars']:>6}  "
-              f"{s['min_chars']:>5}  {s['max_chars']:>5}")
+        print(f"  {label:35s} {s['count']:>6}  {s['avg_chars']:>6}  {s['min_chars']:>5}  {s['max_chars']:>5}")
 
     # ===================================================================
     # Preview each strategy

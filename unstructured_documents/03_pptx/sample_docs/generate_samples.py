@@ -12,9 +12,8 @@ Run:
 from pathlib import Path
 
 from pptx import Presentation
-from pptx.util import Inches, Pt, Emu
 from pptx.enum.text import PP_ALIGN
-
+from pptx.util import Emu, Inches, Pt
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -39,6 +38,7 @@ def _add_textbox(slide, left, top, width, height, text, font_size=14, bold=False
 # Presentation 1 – Introduction to Machine Learning (6 slides)
 # ---------------------------------------------------------------------------
 
+
 def create_ml_presentation() -> Path:
     prs = Presentation()
 
@@ -46,9 +46,7 @@ def create_ml_presentation() -> Path:
     slide_layout = prs.slide_layouts[0]  # Title Slide layout
     slide = prs.slides.add_slide(slide_layout)
     slide.shapes.title.text = "Introduction to Machine Learning"
-    slide.placeholders[1].text = (
-        "A practical overview of ML concepts, algorithms, and applications"
-    )
+    slide.placeholders[1].text = "A practical overview of ML concepts, algorithms, and applications"
 
     # ── Slide 2: Bullet points – ML types ─────────────────────────────────
     slide_layout = prs.slide_layouts[1]  # Title and Content
@@ -70,13 +68,19 @@ def create_ml_presentation() -> Path:
     # ── Slide 3: Table – Algorithm comparison ─────────────────────────────
     slide_layout = prs.slide_layouts[5]  # Blank layout
     slide = prs.slides.add_slide(slide_layout)
-    _add_textbox(slide, Inches(0.5), Inches(0.3), Inches(9), Inches(0.6),
-                 "Comparison of ML Algorithms", font_size=24, bold=True)
+    _add_textbox(
+        slide,
+        Inches(0.5),
+        Inches(0.3),
+        Inches(9),
+        Inches(0.6),
+        "Comparison of ML Algorithms",
+        font_size=24,
+        bold=True,
+    )
 
     rows, cols = 6, 4
-    table_shape = slide.shapes.add_table(rows, cols,
-                                         Inches(0.5), Inches(1.2),
-                                         Inches(9), Inches(4))
+    table_shape = slide.shapes.add_table(rows, cols, Inches(0.5), Inches(1.2), Inches(9), Inches(4))
     table = table_shape.table
 
     headers = ["Algorithm", "Type", "Use Case", "Complexity"]
@@ -125,19 +129,35 @@ def create_ml_presentation() -> Path:
     # ── Slide 5: Grouped text boxes – key takeaways ───────────────────────
     slide_layout = prs.slide_layouts[5]  # Blank
     slide = prs.slides.add_slide(slide_layout)
-    _add_textbox(slide, Inches(0.5), Inches(0.3), Inches(9), Inches(0.6),
-                 "Key Takeaways", font_size=24, bold=True)
+    _add_textbox(
+        slide,
+        Inches(0.5),
+        Inches(0.3),
+        Inches(9),
+        Inches(0.6),
+        "Key Takeaways",
+        font_size=24,
+        bold=True,
+    )
 
     # Create a group shape containing three text boxes
     group = slide.shapes.add_group_shape()
 
     takeaways = [
-        ("Data is King", "The quality and quantity of your data matters more than the algorithm you choose."),
-        ("Start Simple", "Begin with simple models like linear regression before moving to complex architectures."),
-        ("Iterate Fast", "Rapid experimentation and iteration lead to better results than perfecting a single approach."),
+        (
+            "Data is King",
+            "The quality and quantity of your data matters more than the algorithm you choose.",
+        ),
+        (
+            "Start Simple",
+            "Begin with simple models like linear regression before moving to complex architectures.",
+        ),
+        (
+            "Iterate Fast",
+            "Rapid experimentation and iteration lead to better results than perfecting a single approach.",
+        ),
     ]
     box_width = Emu(Inches(2.8).emu)
-    box_height = Emu(Inches(3).emu)
     top = Emu(Inches(1.2).emu)
 
     for idx, (title, desc) in enumerate(takeaways):
@@ -149,8 +169,7 @@ def create_ml_presentation() -> Path:
         tb_title.text_frame.paragraphs[0].font.bold = True
         tb_title.text_frame.paragraphs[0].alignment = PP_ALIGN.CENTER
         # Description box
-        tb_desc = group.shapes.add_textbox(left, Emu(top.emu + Inches(0.7).emu),
-                                           box_width, Emu(Inches(2).emu))
+        tb_desc = group.shapes.add_textbox(left, Emu(top.emu + Inches(0.7).emu), box_width, Emu(Inches(2).emu))
         tb_desc.text_frame.word_wrap = True
         tb_desc.text_frame.paragraphs[0].text = desc
         tb_desc.text_frame.paragraphs[0].font.size = Pt(14)
@@ -186,6 +205,7 @@ def create_ml_presentation() -> Path:
 # Presentation 2 – Q4 Financial Review (4 slides)
 # ---------------------------------------------------------------------------
 
+
 def create_data_presentation() -> Path:
     prs = Presentation()
 
@@ -198,13 +218,19 @@ def create_data_presentation() -> Path:
     # ── Slide 2: Revenue table ────────────────────────────────────────────
     slide_layout = prs.slide_layouts[5]  # Blank
     slide = prs.slides.add_slide(slide_layout)
-    _add_textbox(slide, Inches(0.5), Inches(0.3), Inches(9), Inches(0.6),
-                 "Quarterly Revenue Breakdown", font_size=24, bold=True)
+    _add_textbox(
+        slide,
+        Inches(0.5),
+        Inches(0.3),
+        Inches(9),
+        Inches(0.6),
+        "Quarterly Revenue Breakdown",
+        font_size=24,
+        bold=True,
+    )
 
     rows, cols = 5, 4
-    table_shape = slide.shapes.add_table(rows, cols,
-                                         Inches(0.5), Inches(1.2),
-                                         Inches(9), Inches(3.5))
+    table_shape = slide.shapes.add_table(rows, cols, Inches(0.5), Inches(1.2), Inches(9), Inches(3.5))
     table = table_shape.table
 
     headers = ["Region", "Q1 ($M)", "Q2 ($M)", "Q3 ($M)"]
@@ -223,8 +249,16 @@ def create_data_presentation() -> Path:
     # ── Slide 3: Key metrics text boxes ───────────────────────────────────
     slide_layout = prs.slide_layouts[5]
     slide = prs.slides.add_slide(slide_layout)
-    _add_textbox(slide, Inches(0.5), Inches(0.3), Inches(9), Inches(0.6),
-                 "Key Financial Metrics", font_size=24, bold=True)
+    _add_textbox(
+        slide,
+        Inches(0.5),
+        Inches(0.3),
+        Inches(9),
+        Inches(0.6),
+        "Key Financial Metrics",
+        font_size=24,
+        bold=True,
+    )
 
     metrics = [
         ("Total Revenue", "$140.4M", "Up 12% YoY"),
@@ -234,12 +268,36 @@ def create_data_presentation() -> Path:
     ]
     for idx, (label, value, note) in enumerate(metrics):
         row_top = Inches(1.3 + idx * 1.1)
-        _add_textbox(slide, Inches(0.8), row_top, Inches(3), Inches(0.5),
-                     label, font_size=16, bold=True)
-        _add_textbox(slide, Inches(4.0), row_top, Inches(2), Inches(0.5),
-                     value, font_size=16, bold=False)
-        _add_textbox(slide, Inches(6.2), row_top, Inches(3), Inches(0.5),
-                     note, font_size=14, bold=False)
+        _add_textbox(
+            slide,
+            Inches(0.8),
+            row_top,
+            Inches(3),
+            Inches(0.5),
+            label,
+            font_size=16,
+            bold=True,
+        )
+        _add_textbox(
+            slide,
+            Inches(4.0),
+            row_top,
+            Inches(2),
+            Inches(0.5),
+            value,
+            font_size=16,
+            bold=False,
+        )
+        _add_textbox(
+            slide,
+            Inches(6.2),
+            row_top,
+            Inches(3),
+            Inches(0.5),
+            note,
+            font_size=14,
+            bold=False,
+        )
 
     # ── Slide 4: Conclusion with bullets ──────────────────────────────────
     slide_layout = prs.slide_layouts[1]

@@ -34,6 +34,7 @@ MIXED_CONTENT_PDF = SAMPLE_DIR / "mixed_content.pdf"
 # Extraction wrappers
 # ---------------------------------------------------------------------------
 
+
 def extract_pypdf(pdf_path: Path) -> str:
     """Extract text using pypdf."""
     reader = PdfReader(str(pdf_path))
@@ -90,6 +91,7 @@ def extract_pymupdf_sorted(pdf_path: Path) -> str:
 # Timing utility
 # ---------------------------------------------------------------------------
 
+
 def time_extraction(func, pdf_path: Path, runs: int = 5) -> tuple[str, float]:
     """Run an extraction function multiple times and return text + avg time."""
     times = []
@@ -106,6 +108,7 @@ def time_extraction(func, pdf_path: Path, runs: int = 5) -> tuple[str, float]:
 # ---------------------------------------------------------------------------
 # 1. Text extraction comparison
 # ---------------------------------------------------------------------------
+
 
 def compare_text_extraction():
     """Compare all methods on simple_text.pdf."""
@@ -127,13 +130,15 @@ def compare_text_extraction():
         text, avg_ms = time_extraction(func, SIMPLE_TEXT_PDF, runs=5)
         word_count = len(text.split())
         line_count = len(text.strip().split("\n"))
-        results.append({
-            "Method": name,
-            "Chars": f"{len(text):,}",
-            "Words": f"{word_count:,}",
-            "Lines": f"{line_count:,}",
-            "Avg Time (ms)": f"{avg_ms:.1f}",
-        })
+        results.append(
+            {
+                "Method": name,
+                "Chars": f"{len(text):,}",
+                "Words": f"{word_count:,}",
+                "Lines": f"{line_count:,}",
+                "Avg Time (ms)": f"{avg_ms:.1f}",
+            }
+        )
         texts[name] = text
 
     # Print comparison table
@@ -155,6 +160,7 @@ def compare_text_extraction():
 # ---------------------------------------------------------------------------
 # 2. Table extraction comparison
 # ---------------------------------------------------------------------------
+
 
 def compare_table_extraction():
     """Compare table extraction on tables.pdf."""
@@ -209,18 +215,30 @@ def compare_table_extraction():
 
     print(f"  Text extracted: {len(mupdf_text):,} chars")
     print(f"  Time: {mupdf_time:.1f} ms")
-    print(f"  Note: PyMuPDF extracts table content as text but does not")
-    print(f"  detect table structure (rows/columns). Use pdfplumber for that.")
+    print("  Note: PyMuPDF extracts table content as text but does not")
+    print("  detect table structure (rows/columns). Use pdfplumber for that.")
 
     # Summary table
     print("\n  --- Table Extraction Summary ---")
     summary = [
-        {"Method": "pdfplumber (default)", "Tables Found": len(plumber_tables),
-         "Time (ms)": f"{plumber_time:.1f}", "Structured": "Yes"},
-        {"Method": "pdfplumber (text strategy)", "Tables Found": len(custom_tables),
-         "Time (ms)": f"{custom_time:.1f}", "Structured": "Yes"},
-        {"Method": "PyMuPDF (text only)", "Tables Found": "N/A",
-         "Time (ms)": f"{mupdf_time:.1f}", "Structured": "No"},
+        {
+            "Method": "pdfplumber (default)",
+            "Tables Found": len(plumber_tables),
+            "Time (ms)": f"{plumber_time:.1f}",
+            "Structured": "Yes",
+        },
+        {
+            "Method": "pdfplumber (text strategy)",
+            "Tables Found": len(custom_tables),
+            "Time (ms)": f"{custom_time:.1f}",
+            "Structured": "Yes",
+        },
+        {
+            "Method": "PyMuPDF (text only)",
+            "Tables Found": "N/A",
+            "Time (ms)": f"{mupdf_time:.1f}",
+            "Structured": "No",
+        },
     ]
     print(f"\n{tabulate(summary, headers='keys', tablefmt='grid')}")
 
@@ -228,6 +246,7 @@ def compare_table_extraction():
 # ---------------------------------------------------------------------------
 # 3. Mixed content comparison
 # ---------------------------------------------------------------------------
+
 
 def compare_mixed_content():
     """Compare methods on mixed_content.pdf (text + tables + bullets)."""
@@ -248,12 +267,14 @@ def compare_mixed_content():
     results = []
     for name, func in methods:
         text, avg_ms = time_extraction(func, MIXED_CONTENT_PDF, runs=5)
-        results.append({
-            "Method": name,
-            "Chars": f"{len(text):,}",
-            "Words": f"{len(text.split()):,}",
-            "Time (ms)": f"{avg_ms:.1f}",
-        })
+        results.append(
+            {
+                "Method": name,
+                "Chars": f"{len(text):,}",
+                "Words": f"{len(text.split()):,}",
+                "Time (ms)": f"{avg_ms:.1f}",
+            }
+        )
 
     print(f"\n{tabulate(results, headers='keys', tablefmt='grid')}")
 
@@ -266,6 +287,7 @@ def compare_mixed_content():
 # ---------------------------------------------------------------------------
 # 4. Recommendation summary
 # ---------------------------------------------------------------------------
+
 
 def print_recommendations():
     """Print a summary of when to use each method."""

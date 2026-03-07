@@ -22,8 +22,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from unstructured_documents.shared.chunking import (
-    chunk_by_sentences,
     chunk_by_recursive_split,
+    chunk_by_sentences,
     preview_chunks,
 )
 
@@ -34,6 +34,7 @@ SAMPLE_DIR = Path(__file__).parent / "sample_docs"
 # Sentence tokenization
 # ---------------------------------------------------------------------------
 
+
 def tokenize_sentences(text: str) -> list[str]:
     """
     Split text into individual sentences.
@@ -43,7 +44,7 @@ def tokenize_sentences(text: str) -> list[str]:
     better accuracy with abbreviations, decimal numbers, etc.
     """
     # Split on .!? followed by whitespace, but not inside common abbreviations
-    pattern = r'(?<=[.!?])\s+(?=[A-Z])'
+    pattern = r"(?<=[.!?])\s+(?=[A-Z])"
     sentences = re.split(pattern, text)
     return [s.strip() for s in sentences if s.strip()]
 
@@ -51,6 +52,7 @@ def tokenize_sentences(text: str) -> list[str]:
 # ---------------------------------------------------------------------------
 # Sliding window chunking
 # ---------------------------------------------------------------------------
+
 
 def chunk_sliding_window(
     text: str,
@@ -76,7 +78,7 @@ def chunk_sliding_window(
 
     chunks = []
     for i in range(0, len(sentences) - window_size + 1, stride):
-        window = sentences[i:i + window_size]
+        window = sentences[i : i + window_size]
         chunks.append(" ".join(window))
 
     # Ensure we capture the last sentences if they were not fully covered
@@ -91,6 +93,7 @@ def chunk_sliding_window(
 # ---------------------------------------------------------------------------
 # Paragraph-based semantic chunking
 # ---------------------------------------------------------------------------
+
 
 def chunk_by_topic_paragraphs(text: str, max_chunk_size: int = 800) -> list[str]:
     """
@@ -130,6 +133,7 @@ def chunk_by_topic_paragraphs(text: str, max_chunk_size: int = 800) -> list[str]
 # Semantic coherence analysis
 # ---------------------------------------------------------------------------
 
+
 def analyze_chunk_coherence(chunks: list[str]) -> list[dict]:
     """
     Analyze the semantic coherence of each chunk using simple heuristics.
@@ -153,19 +157,21 @@ def analyze_chunk_coherence(chunks: list[str]) -> list[dict]:
         ends_complete = chunk.rstrip()[-1] in ".!?" if chunk.rstrip() else False
 
         # Count unique "topic words" (non-stopword words with 4+ chars)
-        words = re.findall(r'\b[a-zA-Z]{4,}\b', chunk.lower())
+        words = re.findall(r"\b[a-zA-Z]{4,}\b", chunk.lower())
         unique_words = set(words)
         # Higher ratio = more diverse vocabulary = potentially less focused
         vocab_diversity = len(unique_words) / len(words) if words else 0
 
-        results.append({
-            "chunk_index": i,
-            "length": len(chunk),
-            "sentence_count": len(sentences),
-            "starts_complete": starts_complete,
-            "ends_complete": ends_complete,
-            "vocab_diversity": round(vocab_diversity, 3),
-        })
+        results.append(
+            {
+                "chunk_index": i,
+                "length": len(chunk),
+                "sentence_count": len(sentences),
+                "starts_complete": starts_complete,
+                "ends_complete": ends_complete,
+                "vocab_diversity": round(vocab_diversity, 3),
+            }
+        )
 
     return results
 
@@ -180,12 +186,9 @@ def print_coherence_report(label: str, chunks: list[str]):
 
     print(f"\n  {label}:")
     print(f"    Total chunks: {len(chunks)}")
-    print(f"    Complete sentence starts: {complete_starts}/{len(chunks)} "
-          f"({100*complete_starts//len(chunks)}%)")
-    print(f"    Complete sentence ends:   {complete_ends}/{len(chunks)} "
-          f"({100*complete_ends//len(chunks)}%)")
-    print(f"    Avg vocab diversity:      {avg_diversity:.3f} "
-          f"(lower = more focused)")
+    print(f"    Complete sentence starts: {complete_starts}/{len(chunks)} ({100 * complete_starts // len(chunks)}%)")
+    print(f"    Complete sentence ends:   {complete_ends}/{len(chunks)} ({100 * complete_ends // len(chunks)}%)")
+    print(f"    Avg vocab diversity:      {avg_diversity:.3f} (lower = more focused)")
     avg_len = sum(len(c) for c in chunks) // len(chunks) if chunks else 0
     print(f"    Avg chunk length:         {avg_len} chars")
 
@@ -215,9 +218,9 @@ if __name__ == "__main__":
     sentences = tokenize_sentences(text)
     print(f"  Total sentences: {len(sentences)}")
     print(f"  Avg sentence length: {sum(len(s) for s in sentences) // len(sentences)} chars")
-    print(f"\n  First 5 sentences:")
+    print("\n  First 5 sentences:")
     for i, sent in enumerate(sentences[:5]):
-        print(f"    [{i+1}] {sent[:100]}{'...' if len(sent) > 100 else ''}")
+        print(f"    [{i + 1}] {sent[:100]}{'...' if len(sent) > 100 else ''}")
 
     # ===================================================================
     # 2. Sliding window chunking
@@ -294,24 +297,23 @@ if __name__ == "__main__":
         # Show the 3rd paragraph and check how each strategy handles it
         target_para = paragraphs[2]
         target_start = target_para[:50]
-        print(f"  Target passage (paragraph 3, starts with):")
-        print(f"    \"{target_start}...\"\n")
+        print("  Target passage (paragraph 3, starts with):")
+        print(f'    "{target_start}..."\n')
 
         for label, chunks in all_strategies.items():
             # Find which chunk(s) contain the start of this paragraph
-            matching = [
-                (i, c) for i, c in enumerate(chunks)
-                if target_start in c
-            ]
+            matching = [(i, c) for i, c in enumerate(chunks) if target_start in c]
             if matching:
                 idx, chunk = matching[0]
                 # Check if the full paragraph is in this chunk
                 full_match = target_para in chunk
                 print(f"  {label}:")
-                print(f"    Found in chunk {idx+1}/{len(chunks)}, "
-                      f"full paragraph preserved: {'Yes' if full_match else 'No'}")
-                print(f"    Chunk preview: \"{chunk[:100]}...\"")
+                print(
+                    f"    Found in chunk {idx + 1}/{len(chunks)}, "
+                    f"full paragraph preserved: {'Yes' if full_match else 'No'}"
+                )
+                print(f'    Chunk preview: "{chunk[:100]}..."')
             else:
                 print(f"  {label}:")
-                print(f"    Target paragraph split across chunks (partial match)")
+                print("    Target paragraph split across chunks (partial match)")
             print()

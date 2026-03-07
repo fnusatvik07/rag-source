@@ -42,12 +42,12 @@ def extract_clean_text(html_path: Path) -> str:
 def extract_with_custom_settings(html_path: Path) -> str:
     """Convert HTML to markdown with RAG-optimized settings."""
     converter = html2text.HTML2Text()
-    converter.body_width = 0           # No line wrapping (better for chunking)
-    converter.ignore_links = True      # Links add noise for RAG
-    converter.ignore_images = True     # Can't embed images in text chunks
+    converter.body_width = 0  # No line wrapping (better for chunking)
+    converter.ignore_links = True  # Links add noise for RAG
+    converter.ignore_images = True  # Can't embed images in text chunks
     converter.ignore_emphasis = False  # Keep bold/italic for context
     converter.protect_links = False
-    converter.unicode_snob = True      # Use unicode instead of ASCII approximations
+    converter.unicode_snob = True  # Use unicode instead of ASCII approximations
     converter.skip_internal_links = True
     return converter.handle(html_path.read_text())
 

@@ -15,7 +15,7 @@ uv pip install docling
 uv pip install "docling[tesserocr]"  # for Tesseract OCR
 uv pip install "docling[easyocr]"    # for EasyOCR
 """
-import sys
+
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -23,14 +23,16 @@ SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_docu
 
 def table_extraction_modes():
     """Compare FAST vs ACCURATE table detection on a table-heavy PDF."""
-    from docling.document_converter import DocumentConverter
     from docling.datamodel.base_models import InputFormat
     from docling.datamodel.pipeline_options import PdfPipelineOptions, TableFormerMode
-    from docling.document_converter import PdfFormatOption
+    from docling.document_converter import DocumentConverter, PdfFormatOption
 
     pdf_path = SAMPLES_DIR / "01_pdf" / "sample_docs" / "tables.pdf"
 
-    for mode_name, mode in [("FAST", TableFormerMode.FAST), ("ACCURATE", TableFormerMode.ACCURATE)]:
+    for mode_name, mode in [
+        ("FAST", TableFormerMode.FAST),
+        ("ACCURATE", TableFormerMode.ACCURATE),
+    ]:
         print(f"\n{'=' * 60}")
         print(f"TABLE DETECTION MODE: {mode_name}")
         print(f"{'=' * 60}")
@@ -41,9 +43,7 @@ def table_extraction_modes():
         )
 
         converter = DocumentConverter(
-            format_options={
-                InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)
-            }
+            format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)}
         )
 
         result = converter.convert(str(pdf_path))
@@ -54,10 +54,9 @@ def table_extraction_modes():
 
 def ocr_configuration():
     """Configure OCR settings for scanned documents."""
-    from docling.document_converter import DocumentConverter
     from docling.datamodel.base_models import InputFormat
     from docling.datamodel.pipeline_options import PdfPipelineOptions
-    from docling.document_converter import PdfFormatOption
+    from docling.document_converter import DocumentConverter, PdfFormatOption
 
     pdf_path = SAMPLES_DIR / "01_pdf" / "sample_docs" / "simple_text.pdf"
 
@@ -70,11 +69,7 @@ def ocr_configuration():
         # ocr_options=TesseractCliOcrOptions(lang=["eng"])
     )
 
-    converter = DocumentConverter(
-        format_options={
-            InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)
-        }
-    )
+    converter = DocumentConverter(format_options={InputFormat.PDF: PdfFormatOption(pipeline_options=pipeline_options)})
 
     print("=" * 60)
     print("PDF WITH OCR ENABLED")

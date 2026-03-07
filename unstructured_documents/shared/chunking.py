@@ -33,13 +33,13 @@ def chunk_by_sentences(text: str, sentences_per_chunk: int = 5, overlap_sentence
     Good for: preserves complete sentences, more semantic than character-based.
     Bad for: sentence detection can fail on abbreviations, variable chunk sizes.
     """
-    sentence_pattern = r'(?<=[.!?])\s+'
+    sentence_pattern = r"(?<=[.!?])\s+"
     sentences = re.split(sentence_pattern, text)
     sentences = [s.strip() for s in sentences if s.strip()]
 
     chunks = []
     for i in range(0, len(sentences), sentences_per_chunk - overlap_sentences):
-        chunk_sentences = sentences[i:i + sentences_per_chunk]
+        chunk_sentences = sentences[i : i + sentences_per_chunk]
         if chunk_sentences:
             chunks.append(" ".join(chunk_sentences))
     return chunks
@@ -91,7 +91,7 @@ def chunk_by_recursive_split(
     return [text.strip()] if text.strip() else []
 
 
-def chunk_by_headings(text: str, heading_pattern: str = r'^#+\s+.*$') -> list[dict]:
+def chunk_by_headings(text: str, heading_pattern: str = r"^#+\s+.*$") -> list[dict]:
     """
     Heading-aware chunking for structured documents.
 
@@ -129,16 +129,16 @@ def chunk_by_headings(text: str, heading_pattern: str = r'^#+\s+.*$') -> list[di
 
 def preview_chunks(chunks: list, max_preview: int = 3, max_chars: int = 200) -> None:
     """Print a preview of chunks for demonstration purposes."""
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"Total chunks: {len(chunks)}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
     for i, chunk in enumerate(chunks[:max_preview]):
         if isinstance(chunk, dict):
-            print(f"\n--- Chunk {i+1} [heading: {chunk.get('heading', 'N/A')}] ---")
+            print(f"\n--- Chunk {i + 1} [heading: {chunk.get('heading', 'N/A')}] ---")
             text = chunk.get("content", "")
         else:
-            print(f"\n--- Chunk {i+1} ({len(chunk)} chars) ---")
+            print(f"\n--- Chunk {i + 1} ({len(chunk)} chars) ---")
             text = chunk
 
         if len(text) > max_chars:

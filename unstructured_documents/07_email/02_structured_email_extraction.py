@@ -16,15 +16,15 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from unstructured_documents.shared.chunking import (
-    chunk_by_sentences,
-    chunk_by_recursive_split,
-    preview_chunks,
-)
-
 # Re-use parsing utilities from the companion script.
 # Directory/file names start with digits, so we import via importlib.
 import importlib.util
+
+from unstructured_documents.shared.chunking import (
+    chunk_by_recursive_split,
+    chunk_by_sentences,
+    preview_chunks,
+)
 
 _parsing_spec = importlib.util.spec_from_file_location(
     "email_parsing",
@@ -44,6 +44,7 @@ SAMPLE_DIR = Path(__file__).parent / "sample_docs"
 # ---------------------------------------------------------------------------
 # Structured email representation
 # ---------------------------------------------------------------------------
+
 
 def build_email_record(eml_path: Path) -> dict:
     """
@@ -70,9 +71,7 @@ def build_email_record(eml_path: Path) -> dict:
         attachment_names.append(att["filename"])
         content = att.get("content", "")
         if content and not content.startswith("[Binary"):
-            attachments_text_parts.append(
-                f"--- Attachment: {att['filename']} ---\n{content}"
-            )
+            attachments_text_parts.append(f"--- Attachment: {att['filename']} ---\n{content}")
 
     return {
         "subject": headers.get("Subject", ""),
@@ -90,6 +89,7 @@ def build_email_record(eml_path: Path) -> dict:
 # ---------------------------------------------------------------------------
 # RAG-ready text block construction
 # ---------------------------------------------------------------------------
+
 
 def email_to_rag_text(record: dict, include_attachments: bool = True) -> str:
     """
@@ -127,6 +127,7 @@ def email_to_rag_text(record: dict, include_attachments: bool = True) -> str:
 # Chunking strategies for emails
 # ---------------------------------------------------------------------------
 
+
 def chunk_per_email(records: list[dict]) -> list[str]:
     """
     Strategy 1: One chunk per email.
@@ -149,30 +150,31 @@ def chunk_email_body_only(records: list[dict], chunk_size: int = 500) -> list[di
     all_chunks = []
     for record in records:
         metadata_prefix = (
-            f"Email from {record['from']} to {record['to']} on {record['date']}. "
-            f"Subject: {record['subject']}.\n\n"
+            f"Email from {record['from']} to {record['to']} on {record['date']}. Subject: {record['subject']}.\n\n"
         )
         body_chunks = chunk_by_recursive_split(record["body_text"], chunk_size=chunk_size)
         for i, chunk_text in enumerate(body_chunks):
-            all_chunks.append({
-                "text": metadata_prefix + chunk_text,
-                "source_email": record["subject"],
-                "chunk_index": i,
-                "total_chunks": len(body_chunks),
-            })
+            all_chunks.append(
+                {
+                    "text": metadata_prefix + chunk_text,
+                    "source_email": record["subject"],
+                    "chunk_index": i,
+                    "total_chunks": len(body_chunks),
+                }
+            )
 
         # Attachment text as separate chunks
         if record["attachments_text"]:
-            att_chunks = chunk_by_recursive_split(
-                record["attachments_text"], chunk_size=chunk_size
-            )
+            att_chunks = chunk_by_recursive_split(record["attachments_text"], chunk_size=chunk_size)
             for j, att_chunk in enumerate(att_chunks):
-                all_chunks.append({
-                    "text": metadata_prefix + f"[Attachment content]\n{att_chunk}",
-                    "source_email": record["subject"],
-                    "chunk_index": len(body_chunks) + j,
-                    "total_chunks": len(body_chunks) + len(att_chunks),
-                })
+                all_chunks.append(
+                    {
+                        "text": metadata_prefix + f"[Attachment content]\n{att_chunk}",
+                        "source_email": record["subject"],
+                        "chunk_index": len(body_chunks) + j,
+                        "total_chunks": len(body_chunks) + len(att_chunks),
+                    }
+                )
 
     return all_chunks
 
@@ -244,15 +246,17 @@ if __name__ == "__main__":
     per_email_chunks = chunk_per_email(records)
     print(f"Total chunks: {len(per_email_chunks)}")
     for i, chunk in enumerate(per_email_chunks):
-        print(f"  Chunk {i+1}: {len(chunk)} chars")
+        print(f"  Chunk {i + 1}: {len(chunk)} chars")
 
     # Strategy 2: Body chunking with metadata prefix
     print("\n--- Strategy 2: Body chunking (500 char chunks) ---")
     body_chunks = chunk_email_body_only(records, chunk_size=500)
     print(f"Total chunks: {len(body_chunks)}")
     for chunk_info in body_chunks[:5]:
-        print(f"  [{chunk_info['source_email']}] chunk {chunk_info['chunk_index']+1}/"
-              f"{chunk_info['total_chunks']} ({len(chunk_info['text'])} chars)")
+        print(
+            f"  [{chunk_info['source_email']}] chunk {chunk_info['chunk_index'] + 1}/"
+            f"{chunk_info['total_chunks']} ({len(chunk_info['text'])} chars)"
+        )
     if len(body_chunks) > 5:
         print(f"  ... and {len(body_chunks) - 5} more chunks")
 
@@ -266,10 +270,16 @@ if __name__ == "__main__":
     print(f"\n{'=' * 70}")
     print("CHUNKING STRATEGY SUMMARY")
     print("=" * 70)
-    print(f"  Per-email:      {len(per_email_chunks):>3} chunks | "
-          f"avg {sum(len(c) for c in per_email_chunks) // len(per_email_chunks):>5} chars/chunk")
+    print(
+        f"  Per-email:      {len(per_email_chunks):>3} chunks | "
+        f"avg {sum(len(c) for c in per_email_chunks) // len(per_email_chunks):>5} chars/chunk"
+    )
     body_texts = [c["text"] for c in body_chunks]
-    print(f"  Body-chunked:   {len(body_chunks):>3} chunks | "
-          f"avg {sum(len(c) for c in body_texts) // len(body_texts):>5} chars/chunk")
-    print(f"  Sentence-based: {len(sentence_chunks):>3} chunks | "
-          f"avg {sum(len(c) for c in sentence_chunks) // len(sentence_chunks):>5} chars/chunk")
+    print(
+        f"  Body-chunked:   {len(body_chunks):>3} chunks | "
+        f"avg {sum(len(c) for c in body_texts) // len(body_texts):>5} chars/chunk"
+    )
+    print(
+        f"  Sentence-based: {len(sentence_chunks):>3} chunks | "
+        f"avg {sum(len(c) for c in sentence_chunks) // len(sentence_chunks):>5} chars/chunk"
+    )

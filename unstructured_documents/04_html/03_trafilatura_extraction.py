@@ -16,7 +16,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 import trafilatura
 
 from unstructured_documents.shared.chunking import (
-    chunk_by_headings,
     chunk_by_recursive_split,
     preview_chunks,
 )
@@ -42,6 +41,7 @@ def extract_with_metadata(html_path: Path) -> dict | None:
     )
     if result:
         import json
+
         return json.loads(result)
     return None
 

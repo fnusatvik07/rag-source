@@ -14,8 +14,8 @@ This script works with or without Azure credentials (shows example output).
 
 uv pip install azure-ai-documentintelligence
 """
+
 import os
-import sys
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -49,8 +49,8 @@ def rag_pipeline():
         _show_pipeline_code()
         return
 
-    from azure.core.credentials import AzureKeyCredential
     from azure.ai.documentintelligence import DocumentIntelligenceClient
+    from azure.core.credentials import AzureKeyCredential
 
     client = DocumentIntelligenceClient(endpoint=endpoint, credential=AzureKeyCredential(key))
     pdf_path = SAMPLES_DIR / "01_pdf" / "sample_docs" / "mixed_content.pdf"
@@ -76,7 +76,10 @@ def rag_pipeline():
         if line.startswith("# ") or line.startswith("## "):
             if current_chunk["text"].strip():
                 chunks.append(current_chunk.copy())
-            current_chunk = {"text": line + "\n", "metadata": {"section": line.strip("# ")}}
+            current_chunk = {
+                "text": line + "\n",
+                "metadata": {"section": line.strip("# ")},
+            }
         else:
             current_chunk["text"] += line + "\n"
 
@@ -86,7 +89,7 @@ def rag_pipeline():
     print(f"Step 3: Created {len(chunks)} semantic chunks")
 
     for i, chunk in enumerate(chunks[:5]):
-        print(f"\n  Chunk {i+1} ({len(chunk['text'])} chars):")
+        print(f"\n  Chunk {i + 1} ({len(chunk['text'])} chars):")
         print(f"  Section: {chunk['metadata']['section']}")
         print(f"  Preview: {chunk['text'][:150].strip()}...")
 

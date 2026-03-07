@@ -16,8 +16,8 @@ Each model returns structured fields specific to the document type.
 
 uv pip install azure-ai-documentintelligence
 """
+
 import os
-import sys
 from pathlib import Path
 
 SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_documents"
@@ -26,8 +26,8 @@ SAMPLES_DIR = Path(__file__).resolve().parent.parent.parent / "unstructured_docu
 def prebuilt_read():
     """Use prebuilt-read for pure text extraction (OCR optimized)."""
     try:
-        from azure.core.credentials import AzureKeyCredential
         from azure.ai.documentintelligence import DocumentIntelligenceClient
+        from azure.core.credentials import AzureKeyCredential
     except ImportError:
         print("Install: uv pip install azure-ai-documentintelligence")
         _show_setup_message("PREBUILT-READ MODEL")
@@ -56,7 +56,7 @@ def prebuilt_read():
     print(result.content[:500])
 
     if result.languages:
-        print(f"\nDetected languages: {[l.locale for l in result.languages]}")
+        print(f"\nDetected languages: {[lang.locale for lang in result.languages]}")
 
 
 def prebuilt_document():
@@ -181,4 +181,9 @@ if __name__ == "__main__":
     print("4. Model comparison overview")
     choice = input("Enter 1/2/3/4 (default=4): ").strip() or "4"
 
-    {"1": prebuilt_read, "2": prebuilt_document, "3": prebuilt_invoice, "4": model_comparison}[choice]()
+    {
+        "1": prebuilt_read,
+        "2": prebuilt_document,
+        "3": prebuilt_invoice,
+        "4": model_comparison,
+    }[choice]()

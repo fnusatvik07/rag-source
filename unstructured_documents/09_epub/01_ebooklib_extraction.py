@@ -59,12 +59,14 @@ def list_items(book: epub.EpubBook) -> list[dict]:
     """
     items = []
     for item in book.get_items():
-        items.append({
-            "id": item.get_id(),
-            "name": item.get_name(),
-            "type": item.get_type(),
-            "is_document": item.get_type() == ITEM_DOCUMENT,
-        })
+        items.append(
+            {
+                "id": item.get_id(),
+                "name": item.get_name(),
+                "type": item.get_type(),
+                "is_document": item.get_type() == ITEM_DOCUMENT,
+            }
+        )
     return items
 
 

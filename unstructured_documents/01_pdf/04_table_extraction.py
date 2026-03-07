@@ -33,6 +33,7 @@ TABLES_PDF = SAMPLE_DIR / "tables.pdf"
 # Core extraction
 # ---------------------------------------------------------------------------
 
+
 def extract_all_tables(pdf_path: Path) -> list[dict]:
     """
     Extract every table from every page of a PDF.
@@ -54,24 +55,25 @@ def extract_all_tables(pdf_path: Path) -> list[dict]:
                 # Clean cell values: replace None with empty string, strip whitespace
                 cleaned = []
                 for row in table:
-                    cleaned.append([
-                        (cell.strip() if cell else "") for cell in row
-                    ])
+                    cleaned.append([(cell.strip() if cell else "") for cell in row])
                 header = cleaned[0]
                 rows = cleaned[1:]
-                results.append({
-                    "page": page_num + 1,
-                    "table_index": table_idx,
-                    "header": header,
-                    "rows": rows,
-                    "raw": table,
-                })
+                results.append(
+                    {
+                        "page": page_num + 1,
+                        "table_index": table_idx,
+                        "header": header,
+                        "rows": rows,
+                        "raw": table,
+                    }
+                )
     return results
 
 
 # ---------------------------------------------------------------------------
 # Format converters
 # ---------------------------------------------------------------------------
+
 
 def table_to_list_of_dicts(header: list[str], rows: list[list[str]]) -> list[dict]:
     """Convert a table to a list of dictionaries (one per row)."""
@@ -144,6 +146,7 @@ def table_to_natural_language(
 # ---------------------------------------------------------------------------
 # Demonstrations
 # ---------------------------------------------------------------------------
+
 
 def demo_extract_tables():
     """Extract and display all tables."""
@@ -266,12 +269,14 @@ def demo_rag_preparation():
 
         # Strategy 1: One passage per table (markdown format)
         md_passage = f"## {title}\n\n" + table_to_markdown(t["header"], t["rows"])
-        all_passages.append({
-            "type": "table_markdown",
-            "source": f"tables.pdf, page {t['page']}",
-            "title": title,
-            "content": md_passage,
-        })
+        all_passages.append(
+            {
+                "type": "table_markdown",
+                "source": f"tables.pdf, page {t['page']}",
+                "title": title,
+                "content": md_passage,
+            }
+        )
 
         # Strategy 2: One passage per row (natural language)
         for row_idx, row in enumerate(t["rows"]):
@@ -280,12 +285,14 @@ def demo_rag_preparation():
                 if val:
                     parts.append(f"{col} is {val}")
             sentence = f"In the {title} table: " + ", ".join(parts) + "."
-            all_passages.append({
-                "type": "table_row_nl",
-                "source": f"tables.pdf, page {t['page']}, row {row_idx + 1}",
-                "title": title,
-                "content": sentence,
-            })
+            all_passages.append(
+                {
+                    "type": "table_row_nl",
+                    "source": f"tables.pdf, page {t['page']}, row {row_idx + 1}",
+                    "title": title,
+                    "content": sentence,
+                }
+            )
 
     print(f"\n  Total RAG passages generated: {len(all_passages)}")
 
